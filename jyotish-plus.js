@@ -146,7 +146,7 @@ $('mh-go').onclick=()=>{
 const VN=['शूद्र','वैश्य','क्षत्रिय','ब्राह्मण'],VG=['चतुष्पद','मानव','जलचर','वनचर','कीट'],GN=['देव','मनुष्य','राक्षस'],NDN=['आदि','मध्य','अन्त्य'],YN=['घोडा','हात्ती','भेडा','सर्प','कुकुर','बिरालो','मुसा','गाई','भैँसी','बाघ','मृग','बाँदर','न्याउरीमुसा','सिंह'],PN7=['सूर्य','चन्द्र','मंगल','बुध','गुरु','शुक्र','शनि'];
 const T_VAR=[2,1,0,3,2,1,0,3,2,1,0,3],T_VAS=[0,0,1,2,3,1,1,4,1,0,1,2],T_GAN=[0,1,2,1,0,1,0,0,2,2,1,1,0,2,0,2,0,2,2,1,1,0,2,2,1,1,0],T_NAD=[0,1,2,2,1,0,0,1,2,2,1,0,0,1,2,2,1,0,0,1,2,2,1,0,0,1,2],T_YON=[0,1,2,3,3,4,5,2,5,6,6,7,8,9,8,9,10,10,4,11,12,11,13,0,13,7,1],YEN=[[7,9],[1,13],[0,8],[4,10],[3,12],[11,2],[5,6]];
 const REL=[[2,2,2,1,2,0,0],[2,2,1,2,1,1,1],[2,2,2,0,2,1,1],[2,0,1,2,1,2,1],[2,2,2,0,2,0,1],[0,0,1,2,1,2,2],[0,0,0,2,1,2,2]];
-const PLC=[['काठमाडौँ',27.7172,85.3240],['पोखरा',28.2096,83.9856],['भद्रपुर / बिर्तामोड (झापा)',26.6469,87.9953],['दमक (झापा)',26.6602,87.7000],['विराटनगर',26.4525,87.2718],['धरान',26.8065,87.2846],['इटहरी',26.6637,87.2814],['इलाम',26.9100,87.9283],['जनकपुर',26.7288,85.9266],['वीरगञ्ज',27.0104,84.8770],['भरतपुर (चितवन)',27.6833,84.4333],['बुटवल',27.7006,83.4484],['नेपालगञ्ज',28.0500,81.6167],['धनगढी',28.6833,80.6000]];
+const PLC=window.NPD||[['काठमाडौँ',27.7172,85.3240]];
 $('ml-g').innerHTML=[['b','🤵 वर (केटा)'],['g','👰 वधू (केटी)']].map(([k,t])=>`<div class="tz-c"><h3>${t}</h3><label>नाम</label><input id="ml-${k}-n"><label>मितिको प्रकार</label><select id="ml-${k}-c"><option value="BS">विक्रम सम्वत् (BS)</option><option value="AD">अंग्रेजी (AD)</option></select><label>जन्म मिति (YYYY-MM-DD)</label><input id="ml-${k}-d" placeholder="2055-01-29"><label>जन्म समय</label><input type="time" id="ml-${k}-t"><label>जन्म स्थान</label><select id="ml-${k}-p">${PLC.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join('')}</select></div>`).join('');
 function person(k){const g=s=>$('ml-'+k+'-'+s).value,pd=parseD(g('d'),g('c'));if(!pd||!g('t'))return null;
  const [Hh,Mi]=g('t').split(':').map(Number),pl=PLC[+g('p')],r=calc(pd[0],pd[1],pd[2],Hh,Mi,pd[0]<1986?5.5:5.75,pl[1],pl[2]),as=Math.floor(r.asc/30),mh=(Math.floor(r.sid[2]/30)-as+12)%12+1;
@@ -315,4 +315,124 @@ function fd(){const P=+$('fd-p').value,r=+$('fd-r').value/100,t=+$('fd-y').value
  const tg=document.querySelector('.tz-g'),tf=document.getElementById('tz-f');
  if(tg&&tf){tf.insertAdjacentHTML('beforeend','<button data-t="app">📒 Mero Hisab</button>');
   tg.insertAdjacentHTML('beforeend','<div class="tz-c wide" data-g="app" style="display:none;text-align:center"><h3>📒 Mero Hisab</h3><p style="color:var(--dim);line-height:1.7;margin-bottom:1rem">मेरो हिसाब एप नयाँ ट्याबमा खोल्नुहोस्।</p><a class="btn bp" href="'+URL+'" target="_blank" rel="noopener">Mero Hisab खोल्नुहोस् ↗</a></div>')}
+})();
+
+/* =====================================================================
+   PLUS 3: चौघडिया/होरा, गोचर, नाम बाट राशि, राशिफल शेयर, धेरै कुण्डली सेभ
+   ===================================================================== */
+(function(){
+const $=id=>document.getElementById(id),JP=window.JP,NPD=window.NPD||[['काठमाडौँ',27.7172,85.3240]];
+const jf=$('jt-f'),pm=$('jt-mh');if(!jf||!pm||!JP)return;
+const ND=s=>String(s).replace(/\d/g,d=>'०१२३४५६७८९'[d]),pad=n=>String(n).padStart(2,'0'),box=(t,b)=>`<div class="kl-box"><h3>${t}</h3>${b}</div>`;
+const SG=['मेष','वृष','मिथुन','कर्कट','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुम्भ','मीन'],WN=['आइतबार','सोमबार','मंगलबार','बुधबार','बिहीबार','शुक्रबार','शनिबार'],WS=['आइत','सोम','मंगल','बुध','बिहि','शुक्र','शनि'];
+const NK=['अश्विनी','भरणी','कृत्तिका','रोहिणी','मृगशिरा','आर्द्रा','पुनर्वसु','पुष्य','आश्लेषा','मघा','पूर्वाफाल्गुनी','उत्तराफाल्गुनी','हस्त','चित्रा','स्वाती','विशाखा','अनुराधा','ज्येष्ठा','मूल','पूर्वाषाढा','उत्तराषाढा','श्रवण','धनिष्ठा','शतभिषा','पूर्वाभाद्रपद','उत्तराभाद्रपद','रेवती'];
+const css=document.createElement('style');css.textContent='.pc .now{outline:2px solid var(--a)}.ksv li{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap}.ksv .b{display:flex;gap:.4rem}.ksv button,.nmr button{padding:.45rem .9rem;border-radius:100px;border:1px solid var(--bd);background:var(--card);color:var(--text);font:600 .78rem "Space Grotesk",sans-serif}.ksv button:hover,.nmr button:hover{border-color:var(--p)}';document.head.appendChild(css);
+
+/* ---- ट्याब र प्यानल ---- */
+jf.insertAdjacentHTML('beforeend','<button data-jt="cg" role="tab">🕐 चौघडिया / होरा</button><button data-jt="gc" role="tab">🪐 गोचर</button><button data-jt="nm" role="tab">🔤 नाम बाट राशि</button>');
+const opts=NPD.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join(''),ktm=Math.max(0,NPD.findIndex(x=>x[0]==='काठमाडौँ'));
+pm.insertAdjacentHTML('afterend',`<div class="jt-p" id="jt-cg"><p class="rs-top">आजको कुन समय शुभ र कुन अशुभ — सूर्योदय र सूर्यास्त (आफ्नो जिल्ला अनुसार) बाट निकालिएको चौघडिया र होरा।</p><div class="kl-f"><div><label>मिति (AD)</label><input type="date" id="cg-d"></div><div><label>जिल्ला</label><select id="cg-p">${opts}</select></div></div><div class="kl-out" id="cg-o"></div></div>
+<div class="jt-p" id="jt-gc"><p class="rs-top">आफ्नो राशि छानेर आज वा यो हप्ता ग्रहको गोचर (हालको ग्रह स्थिति) ले कस्तो असर गर्छ हेर्नुहोस्। राशि थाहा छैन भने \"नाम बाट राशि\" ट्याब हेर्नुहोस्।</p><div class="kl-f"><div><label>तपाईंको राशि</label><select id="gc-r">${SG.map((s,i)=>`<option value="${i}">${s}</option>`).join('')}</select></div><div><label>अवधि</label><select id="gc-p"><option value="d">आज</option><option value="w">यो हप्ता (७ दिन)</option></select></div></div><div class="kl-out" id="gc-o"></div></div>
+<div class="jt-p" id="jt-nm"><p class="rs-top">नामको पहिलो अक्षरबाट नाम राशि र नक्षत्र पत्ता लगाउनुहोस् (देवनागरी वा English मा लेख्न सकिन्छ)।</p><div class="kl-f"><div class="wide"><label>नाम</label><input id="nm-i" placeholder="जस्तै: पवन / Pawan"></div><button class="btn bp wide" type="button" id="nm-b">🔤 राशि खोज्नुहोस्</button></div><div class="kl-out nmr" id="nm-o"></div></div>`);
+jf.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const t=b.dataset.jt;['cg','gc','nm'].forEach(k=>$('jt-'+k).classList.toggle('on',t===k));if(t==='cg')cgR();if(t==='gc'){if(!$('gc-r').dataset.u)myR();gcR()}});
+
+/* ---- ७७ जिल्ला: कुण्डली र मिलानमा पूर्वनिर्धारित काठमाडौँ ---- */
+['kl-p','ml-b-p','ml-g-p'].forEach(id=>{const s=$(id);if(s&&NPD.length>20)s.value=ktm});$('cg-p').value=ktm;
+
+/* ---- चौघडिया र होरा ---- */
+const CD=['उद्वेग','चर','लाभ','अमृत','काल','शुभ','रोग'],CN=['शुभ','अमृत','चर','रोग','काल','लाभ','उद्वेग'],CQ={'अमृत':2,'शुभ':2,'लाभ':2,'चर':1,'उद्वेग':0,'रोग':0,'काल':0},QL=['अशुभ','मध्यम','शुभ'],QC=['kl-bad','','kl-ok'];
+const HS=['सूर्य','शुक्र','बुध','चन्द्र','शनि','गुरु','मंगल'],HST=[0,3,6,2,5,1,4],HQ=[1,2,2,2,0,2,0],HU=['सरकारी, मान-सम्मानका काम','विवाह, कला, खरिद-बिक्री','व्यापार, लेखपढ, शिक्षा','यात्रा, घरायसी काम, मनको शान्ति','मेहनत, मेसिनरी (नयाँ शुभ काम कमजोर)','धार्मिक, शिक्षा र शुभ काम','साहस, जग्गाजमिन (शान्त काम कमजोर)'];
+const ft=x=>{x=Math.round(x);const h=Math.floor(x/60)%24,m=x%60;return ND(h%12||12)+':'+ND(pad(m))+' '+(h<4?'राति':h<12?'बिहान':h<16?'दिउँसो':h<19?'साँझ':'राति')};
+function sunT(y,m,d,la,lo){const P=Math.PI/180,N=Math.floor((Date.UTC(y,m-1,d)-Date.UTC(y,0,0))/864e5),g=2*Math.PI/365*(N-1),eq=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g)),dc=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g),L=la*P,ha=Math.acos((Math.sin(-0.833*P)-Math.sin(L)*Math.sin(dc))/(Math.cos(L)*Math.cos(dc)))/P,noon=720+(5.75*60-lo*4)-eq;return{rise:noon-ha*4,set:noon+ha*4}}
+const t0=JP.todayAD();$('cg-d').value=t0[0]+'-'+pad(t0[1])+'-'+pad(t0[2]);
+function cgR(){
+ const v=$('cg-d').value.split('-').map(Number),o=$('cg-o');if(!v[0]){o.innerHTML='';return}
+ const pl=NPD[+$('cg-p').value]||NPD[0],s=sunT(v[0],v[1],v[2],pl[1],pl[2]),nx=new Date(Date.UTC(v[0],v[1]-1,v[2]+1)),s2=sunT(nx.getUTCFullYear(),nx.getUTCMonth()+1,nx.getUTCDate(),pl[1],pl[2]),
+ wd=JP.adWd(v[0],v[1],v[2]),end=s2.rise+1440,dl=(s.set-s.rise)/8,nl=(end-s.set)/8,hl=(s.set-s.rise)/12,nh=(end-s.set)/12,
+ tn=JP.todayAD(),nw=new Date(Date.now()+5.75*36e5),now=(Date.UTC(tn[0],tn[1]-1,tn[2])-Date.UTC(v[0],v[1]-1,v[2]))/864e5*1440+nw.getUTCHours()*60+nw.getUTCMinutes(),
+ cu=(a,b)=>now>=a&&now<b;
+ let rows='',good=[],hc='';
+ for(let k=0;k<16;k++){const dy=k<8,i=dy?k:k-8,nm=dy?CD[(wd*3+i)%7]:CN[(wd*2+i)%7],a=dy?s.rise+i*dl:s.set+i*nl,b=a+(dy?dl:nl),q=CQ[nm],c=cu(a,b);
+  if(dy&&q===2)good.push(ft(a)+'–'+ft(b));
+  rows+=`<tr${c?' class="cu"':''}><td>${dy?'☀️ दिन':'🌙 रात'}</td><td>${ft(a)} – ${ft(b)}${c?' ← अहिले':''}</td><td>${nm}</td><td class="${QC[q]}">${QL[q]}</td></tr>`}
+ for(let k=0;k<24;k++){const dy=k<12,a=dy?s.rise+k*hl:s.set+(k-12)*nh,b=a+(dy?hl:nh),x=(HST[wd]+k)%7,c=cu(a,b);
+  hc+=`<div class="${HQ[x]===2?'good':HQ[x]===0?'bad':''}${c?' now':''}"><small>${dy?'☀️':'🌙'} ${ft(a)} – ${ft(b)}${c?' ← अहिले':''}</small><b>${HS[x]} होरा</b><small style="color:var(--dim)">${HU[x]}</small></div>`}
+ const b=JP.ad2bs(v[0],v[1],v[2]);
+ o.innerHTML=box(`🕐 ${b?JP.bsTxt(b)+', ':''}${WN[wd]} — ${pl[0]}`,`<p class="kl-no" style="text-align:left;line-height:1.9">🌅 सूर्योदय <b>${ft(s.rise)}</b> · 🌇 सूर्यास्त <b>${ft(s.set)}</b><br>✨ दिनका शुभ चौघडिया: ${good.join(' · ')||'—'}</p>`)+
+ box('⏱ चौघडिया (८ दिन + ८ रात)',`<div class="kl-tw"><table class="kl-t" style="min-width:420px"><tr><th>समय</th><th>अवधि</th><th>चौघडिया</th><th>फल</th></tr>${rows}</table></div>`)+
+ box('🪐 होरा (२४ घण्टा)',`<div class="pc">${hc}</div>`)+
+ '<p class="kl-no">अमृत, शुभ र लाभ शुभ; चर मध्यम (यात्राका लागि ठीक); उद्वेग, रोग र काल अशुभ मानिन्छन्। समय खगोलीय गणनाबाट अनुमानित हो (१–२ मिनेट फरक पर्न सक्छ)। विवाह जस्ता ठूला कामका लागि अनुभवी ज्योतिषीसँग सोध्नुहोस्।</p>'}
+$('cg-d').addEventListener('change',cgR);$('cg-p').addEventListener('change',cgR);
+setInterval(()=>{if($('jt-cg').classList.contains('on'))cgR()},60000);
+
+/* ---- गोचर ---- */
+const P9=['सूर्य','चन्द्र','मंगल','बुध','गुरु','शुक्र','शनि','राहु','केतु'],FV=[[3,6,10,11],[1,3,6,7,10,11],[3,6,11],[2,4,6,8,10,11],[2,5,7,9,11],[1,2,3,4,5,8,9,11,12],[3,6,11],[3,6,10,11],[3,6,11]],GT=['मान-सम्मान र स्वास्थ्य','मन र भावना','साहस र जग्गाजमिन','बुद्धि, बोली र व्यापार','ज्ञान, धन र सन्तान','प्रेम र सुख-सुविधा','काम र मेहनत','अचानक परिवर्तन','अलगाव र अन्तर्ज्ञान'];
+const trn=ms=>{const d=new Date(ms),r=window.JPC(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes(),0,0,0);return r.sid.map(x=>Math.floor(x/30))};
+const vd=n=>n>=6?['राम्रो','kl-ok']:n>=4?['मिश्रित','']:['सावधानी','kl-bad'];
+function myR(){try{const v=localStorage.getItem('myRashi');if(v!==null&&SG[+v])$('gc-r').value=+v}catch(e){}}
+function gcR(){
+ const o=$('gc-o');if(!window.JPC){o.textContent='गणना लोड भएन, पेज रिफ्रेस गर्नुहोस्।';return}
+ const r=+$('gc-r').value,hs=a=>a.map(s=>(s-r+12)%12+1),gd=h=>h.filter((x,i)=>FV[i].includes(x)).length,now=trn(Date.now()),h0=hs(now),n0=gd(h0),v0=vd(n0),t=JP.todayAD();
+ let wk='';
+ if($('gc-p').value==='w'){let rows='';for(let i=0;i<7;i++){const a=new Date(Date.UTC(t[0],t[1]-1,t[2]+i,6,30)),sg=trn(a.getTime()),h=hs(sg),n=gd(h),v=vd(n),b=JP.ad2bs(a.getUTCFullYear(),a.getUTCMonth()+1,a.getUTCDate());
+  rows+=`<tr><td>${b?JP.bsTxt(b):''} (${WS[a.getUTCDay()]})</td><td>${SG[sg[1]]} (${ND(h[1])}औँ)</td><td>${ND(n)}/९</td><td class="${v[1]}">${v[0]}</td></tr>`}
+  wk=box('📆 यो हप्ताको दिनवार गोचर',`<div class="kl-tw"><table class="kl-t" style="min-width:380px"><tr><th>दिन</th><th>चन्द्र गोचर</th><th>शुभ ग्रह</th><th>समग्र</th></tr>${rows}</table></div><p class="kl-no" style="margin-top:.6rem">चन्द्रमा छिटो घुम्छ (करिब २.२५ दिनमा एक राशि), त्यसैले दिनअनुसार फल फेरिन्छ। गुरु, शनि जस्ता ढिला ग्रहको स्थिति हप्ताभर प्रायः उही रहन्छ।</p>`)}
+ const rows=P9.map((p,i)=>{const ok=FV[i].includes(h0[i]);return `<tr><td>${p}</td><td>${SG[now[i]]}</td><td>${ND(h0[i])}</td><td class="${ok?'kl-ok':'kl-bad'}">${ok?'शुभ':'अशुभ'}</td><td>${GT[i]} ${ok?'मा सहयोगी':'मा सावधानी'}</td></tr>`}).join('');
+ o.innerHTML=box(`🪐 ${SG[r]} राशिको आजको गोचर`,`<p style="text-align:center;font-size:1.3rem;font-weight:800;font-family:Syne,sans-serif"><span class="${v0[1]}">${v0[0]}</span> · शुभ ग्रह ${ND(n0)}/९</p><p class="kl-no">आज चन्द्रमा <b>${SG[now[1]]}</b> राशिमा छ (तपाईंको राशिबाट ${ND(h0[1])}औँ)।${[12,1,2].includes(h0[6])?'<br>⚠ शनि तपाईंको राशिबाट '+ND(h0[6])+' स्थानमा छ — साढेसाती चलिरहेको मानिन्छ, मेहनत र धैर्य बढी चाहिन्छ।':''}</p>`)+wk+
+ box('🔭 ग्रह-ग्रहको स्थिति',`<div class="kl-tw"><table class="kl-t" style="min-width:480px"><tr><th>ग्रह</th><th>अहिले राशि</th><th>भाव (आफ्नो राशिबाट)</th><th>गोचर</th><th>असर</th></tr>${rows}</table></div>`)+
+ '<p class="kl-no">यो गोचरको सामान्य शास्त्रीय नियम (चन्द्र राशिबाट ग्रहको भाव) अनुसार हो, वेध र जन्मकुण्डलीको दशा मिलाइएको छैन। मनोरञ्जन तथा सामान्य जानकारीका लागि मात्र हो।</p>'}
+$('gc-r').addEventListener('change',e=>{e.target.dataset.u=1;gcR()});$('gc-p').addEventListener('change',gcR);
+
+/* ---- नाम बाट राशि ---- */
+const NA=[['चु','चे','चो','ला'],['ली','लू','ले','लो'],['अ','ई','उ','ए'],['ओ','वा','वी','वू'],['वे','वो','का','की'],['कू','घ','ङ','छ'],['के','को','हा','ही'],['हू','हे','हो','डा'],['डी','डू','डे','डो'],['मा','मी','मू','मे'],['मो','टा','टी','टू'],['टे','टो','पा','पी'],['पू','ष','ण','ठ'],['पे','पो','रा','री'],['रू','रे','रो','ता'],['ती','तू','ते','तो'],['ना','नी','नू','ने'],['नो','या','यी','यू'],['ये','यो','भा','भी'],['भू','धा','फा','ढा'],['भे','भो','जा','जी'],['खी','खू','खे','खो'],['गा','गी','गू','गे'],['गो','सा','सी','सू'],['से','सो','दा','दी'],['दू','थ','झ','ञ'],['दे','दो','चा','ची']];
+const NZ=s=>s.replace(/ि/g,'ी').replace(/ु/g,'ू').replace(/ै/g,'े').replace(/ौ/g,'ो'),TB=[];NA.forEach((a,ni)=>a.forEach((l,p)=>TB.push([NZ(l),ni,p])));
+const IV={'अ':'अ','आ':'अ','इ':'ई','ई':'ई','उ':'उ','ऊ':'उ','ए':'ए','ऐ':'ए','ओ':'ओ','औ':'ओ'};
+function dev(s){const c=[...s],f=c[0];if(IV[f])return{c:[IV[f]]};if(!/[क-ह]/.test(f))return null;let i=1;while(c[i]==='्'&&/[क-ह]/.test(c[i+1]||''))i+=2;
+ const m=/[ािीुूृेैोौ]/.test(c[i]||'')?c[i]:'ा',cs=[f];if(f==='श'||f==='ष')cs.push('स');return{c:cs.map(x=>NZ(x+m)),cons:cs}}
+const CM={k:['क'],kh:['ख'],g:['ग'],gh:['घ'],ng:['ङ'],ch:['च'],chh:['छ'],c:['च'],j:['ज'],z:['ज'],jh:['झ'],t:['ट','त'],th:['ठ','थ'],d:['ड','द'],dh:['ढ','ध'],n:['न','ण'],p:['प'],ph:['फ'],f:['फ'],b:['ब'],bh:['भ'],m:['म'],y:['य'],r:['र'],l:['ल'],w:['व'],v:['व'],s:['स','श','ष'],sh:['श','ष','स'],h:['ह']},VI={a:'अ',aa:'अ',i:'ई',ee:'ई',u:'उ',oo:'उ',e:'ए',ai:'ए',o:'ओ',au:'ओ',ou:'ओ'},VM={a:'ा',aa:'ा',i:'ी',ee:'ी',u:'ू',oo:'ू',e:'े',ai:'े',o:'ो',au:'ो',ou:'ो'};
+function rom(s){s=s.toLowerCase().replace(/[^a-z]/g,'');if(!s)return null;const vm=s.match(/^(aa|ai|au|ee|oo|ou|[aeiou])/);if(vm)return{c:[VI[vm[1]]]};
+ const cm=s.match(/^(chh|ch|kh|gh|ng|jh|th|dh|ph|bh|sh|[kgjtdnpbmyrlwvshzcf])/);if(!cm||!CM[cm[1]])return null;const vv=s.slice(cm[1].length).match(/^(aa|ai|au|ee|oo|ou|[aeiou])/),m=vv?VM[vv[1]]:'ा';return{c:CM[cm[1]].map(x=>NZ(x+m)),cons:CM[cm[1]]}}
+function nmGo(){const v=$('nm-i').value.trim(),o=$('nm-o');if(!v){o.innerHTML='';return}
+ const q=/[\u0900-\u097F]/.test(v[0])?dev(v):rom(v);
+ if(!q){o.innerHTML=box('🔤 नतिजा','<p style="color:var(--dim)">नामको पहिलो अक्षर चिन्न सकिएन। कृपया नाम देवनागरी वा English अक्षरमा लेख्नुहोस्।</p>');return}
+ let m=TB.filter(x=>q.c.includes(x[0])),ap=0;if(!m.length&&q.cons){m=TB.filter(x=>q.cons.includes(x[0][0]));ap=1}
+ if(!m.length){o.innerHTML=box('🔤 नतिजा','<p style="color:var(--dim)">यो अक्षरसँग मिल्ने नामाक्षर फेला परेन। कुण्डली ट्याबमा जन्म विवरणबाट राशि निकाल्नुहोस्।</p>');return}
+ const li=m.map(x=>{const r=Math.floor((x[1]*4+x[2])/9);return `<li><b>${NA[x[1]][x[2]]}</b> → ${NK[x[1]]} नक्षत्र (पाद ${ND(x[2]+1)}) → <b>${SG[r]} राशि</b> <span class="b"><button type="button" data-r="${r}" data-a="rs">🌟 आजको राशिफल</button> <button type="button" data-r="${r}" data-a="gc">🪐 गोचर</button></span></li>`}).join('');
+ o.innerHTML=box(`🔤 “${v}” को नाम राशि`,`${ap||m.length>1?'<p class="kl-no" style="text-align:left;margin-bottom:.6rem">'+(ap?'यो अक्षरको सही मात्रा तालिकामा नभेटिएकाले नजिकका सम्भावित नतिजा देखाइएको हो।':'English अक्षरबाट एकभन्दा बढी सम्भावना बन्छ। ठीक नतिजाका लागि देवनागरीमा नाम लेख्नुहोस्।')+'</p>':''}<ul class="kl-ul ksv">${li}</ul>`)+
+ '<p class="kl-no">यो नामाक्षरमा आधारित नाम राशि हो। जन्मकुण्डली (चन्द्र राशि) बाट निस्किने राशि फरक पर्न सक्छ — जन्म समय थाहा भए कुण्डली ट्याब बढी भरपर्दो हुन्छ।</p>'}
+$('nm-b').onclick=nmGo;$('nm-i').addEventListener('keydown',e=>{if(e.key==='Enter')nmGo()});
+$('nm-o').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const r=+b.dataset.r;
+ if(b.dataset.a==='rs'){const c=document.querySelector('#rs-g [data-rs="'+r+'"]');if(c)c.click()}
+ else{$('gc-r').value=r;$('gc-r').dataset.u=1;jf.querySelector('[data-jt="gc"]').click()}});
+
+/* ---- राशिफल शेयर (WhatsApp / Facebook) ---- */
+const mb=$('crs-mb');
+if(mb){
+ new MutationObserver(()=>{if(!mb.querySelector('[data-my]')||mb.querySelector('.shr'))return;const nv=mb.querySelector('.crs-nav');if(!nv)return;
+  nv.insertAdjacentHTML('afterend','<div class="crs-nav shr" style="margin-top:.7rem"><button type="button" data-sh="wa" style="background:#25d366;border-color:#25d366;color:#fff">💬 WhatsApp मा शेयर</button><button type="button" data-sh="fb" style="background:#1877f2;border-color:#1877f2;color:#fff">📘 Facebook मा शेयर</button>'+(navigator.share?'<button type="button" data-sh="nt">📤 अन्य</button>':'')+'</div>')}).observe(mb,{childList:true});
+ mb.addEventListener('click',e=>{const b=e.target.closest('[data-sh]');if(!b)return;
+  const g=s=>{const x=mb.querySelector(s);return x?x.textContent.replace(/\s+/g,' ').trim():''},u=/^https?:/.test(location.href)?location.origin+location.pathname+'#jyotish':'https://pabansubedi.com.np/#jyotish',
+  t='🌟 '+g('h3')+' — '+g('.crs-meta span').replace(/^📅\s*/,'')+'\n'+g('.crs-sum')+'\n'+g('.rs-ch')+'\n\n👉 आफ्नो राशिफल यहाँ हेर्नुहोस्: '+u,k=b.dataset.sh;
+  if(k==='wa')window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener');
+  else if(k==='fb')window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u)+'&quote='+encodeURIComponent(t),'_blank','noopener');
+  else if(navigator.share)navigator.share({text:t}).catch(()=>{})})}
+
+/* ---- धेरै कुण्डली सेभ (यही ब्राउजरमा) ---- */
+const kf=$('kl-f'),kd=$('kl-d'),ko=$('kl-out'),pv=document.querySelector('.kl-pv');
+if(kf&&ko){
+ const SK='jpKundali',ld=()=>{try{return JSON.parse(localStorage.getItem(SK)||'[]')}catch(e){return[]}},sv=a=>{try{localStorage.setItem(SK,JSON.stringify(a));return 1}catch(e){return 0}};
+ if(pv)pv.textContent='🔒 तपाईंको विवरण यही ब्राउजरमा गणना हुन्छ र कतै पठाइँदैन। चाहनुभयो भने 💾 सेभ थिचेर परिवारका कुण्डली यही ब्राउजर (फोन/कम्प्युटर) मै राख्न सकिन्छ।';
+ ko.insertAdjacentHTML('beforebegin','<div id="kl-sv" style="max-width:900px;margin:0 auto"></div>');
+ let cur=null;
+ kf.addEventListener('submit',()=>{if(kd.value&&$('kl-t').value)cur={n:$('kl-nm').value.trim(),d:kd.value,t:$('kl-t').value,p:$('kl-p').selectedOptions[0].textContent,la:$('kl-la').value,lo:$('kl-lo').value,tz:$('kl-tz').value}},true);
+ function list(){const a=ld(),el=$('kl-sv');if(!a.length){el.innerHTML='';return}
+  el.innerHTML=box('📂 सेभ गरिएका कुण्डली ('+ND(a.length)+')','<ul class="kl-ul ksv">'+a.map((k,i)=>`<li><span><b>${k.n||'नाम नराखिएको'}</b> · ${k.d} · ${ND(k.t)} · ${k.p}</span><span class="b"><button type="button" data-o="${i}">👁 खोल्नुहोस्</button><button type="button" data-x="${i}">🗑</button></span></li>`).join('')+'</ul>')}
+ function open(i){const k=ld()[i];if(!k)return;$('kl-nm').value=k.n;const c=$('kl-cal');if(c){c.value='AD';c.dispatchEvent(new Event('change'))}kd.value=k.d;$('kl-t').value=k.t;
+  const p=$('kl-p'),x=[...p.options].findIndex(o=>o.textContent===k.p);p.value=x<0?p.options.length-1:x;p.dispatchEvent(new Event('change'));$('kl-la').value=k.la;$('kl-lo').value=k.lo;$('kl-tz').value=k.tz;
+  kf.requestSubmit?kf.requestSubmit():kf.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}))}
+ $('kl-sv').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.o!==undefined)open(+b.dataset.o);if(b.dataset.x!==undefined){const a=ld();a.splice(+b.dataset.x,1);sv(a);list()}});
+ new MutationObserver(()=>{const bar=ko.querySelector('.kl-bar');if(!bar||bar.querySelector('#kl-svb'))return;
+  bar.insertAdjacentHTML('afterbegin','<button type="button" id="kl-svb">💾 यो कुण्डली सेभ गर्नुहोस्</button>');
+  $('kl-svb').onclick=e=>{if(!cur)return;const a=ld().filter(k=>!(k.n===cur.n&&k.d===cur.d&&k.t===cur.t&&k.p===cur.p));a.unshift(cur);if(a.length>30)a.length=30;e.target.textContent=sv(a)?'✅ सेभ भयो':'⚠ सेभ गर्न सकिएन';list()}}).observe(ko,{childList:true});
+ list()}
 })();

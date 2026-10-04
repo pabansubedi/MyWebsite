@@ -772,6 +772,7 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
   <p>© <span id="yr"></span> Made with <span class="h">♥</span> in Jhapa, Nepal 🇳🇵 by <b class="grad">Paban Subedi</b> — All Rights Reserved</p>
 </footer>
 
+<script src="nepal-districts.js?v=1"></script>
 <script>
 /* ============================================================
    📸 YOUR IMAGE LINKS — PASTE HERE (only this block needs editing)
@@ -1471,7 +1472,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
   const GEM=[['माणिक्य','आइतबार','रातो'],['मोती','सोमबार','सेतो'],['मुगा','मंगलबार','रातो'],['पन्ना','बुधबार','हरियो'],['पुष्पराज','बिहीबार','पहेँलो'],['हीरा','शुक्रबार','सेतो / क्रीम'],['नीलम','शनिबार','निलो / कालो']];
   const EX={0:0,1:1,2:9,3:5,4:3,5:11,6:6},OWN={0:[4],1:[3],2:[0,7],3:[2,5],4:[8,11],5:[1,6],6:[9,10]};
   const dig=(i,sg)=>i>6?'':EX[i]===sg?'उच्च':(EX[i]+6)%12===sg?'नीच':OWN[i].includes(sg)?'स्वराशि':'';
-  const PLC=[['काठमाडौँ',27.7172,85.3240],['ललितपुर',27.6644,85.3188],['भक्तपुर',27.6710,85.4298],['पोखरा',28.2096,83.9856],['भद्रपुर / बिर्तामोड (झापा)',26.6469,87.9953],['दमक (झापा)',26.6602,87.7000],['विराटनगर',26.4525,87.2718],['धरान',26.8065,87.2846],['इटहरी',26.6637,87.2814],['इलाम',26.9100,87.9283],['धनकुटा',26.9833,87.3333],['जनकपुर',26.7288,85.9266],['वीरगञ्ज',27.0104,84.8770],['हेटौँडा',27.4287,85.0322],['भरतपुर (चितवन)',27.6833,84.4333],['बुटवल',27.7006,83.4484],['नेपालगञ्ज',28.0500,81.6167],['सुर्खेत',28.6000,81.6333],['धनगढी',28.6833,80.6000],['अन्य (हातैले हाल्नुहोस्)',0,0]];
+  const PLC=(window.NPD||[['काठमाडौँ',27.7172,85.3240]]).concat([['अन्य (हातैले हाल्नुहोस्)',0,0]]);
   $k('kl-p').innerHTML=PLC.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join('');
   $k('kl-p').onchange=e=>$k('kl-man').classList.toggle('on',+e.target.value===PLC.length-1);
   const EL={sun:[0,0,0,0,282.9404,4.70935e-5,1,0.016709,-1.151e-9,356.0470,0.9856002585],moon:[125.1228,-0.0529538083,5.1454,0,318.0634,0.1643573223,60.2666,0.0549,0,115.3654,13.0649929509],me:[48.3313,3.24587e-5,7.0047,5e-8,29.1241,1.01444e-5,0.387098,0.205635,5.59e-10,168.6562,4.0923344368],ve:[76.6799,2.46590e-5,3.3946,2.75e-8,54.8910,1.38374e-5,0.723330,0.006773,-1.302e-9,48.0052,1.6021302244],ma:[49.5574,2.11081e-5,1.8497,-1.78e-8,286.5016,2.92961e-5,1.523688,0.093405,2.516e-9,18.6021,0.5240207766],ju:[100.4542,2.76854e-5,1.3030,-1.557e-7,273.8777,1.64505e-5,5.20256,0.048498,4.469e-9,19.8950,0.0830853001],sa:[113.6634,2.38980e-5,2.4886,-1.081e-7,339.3939,2.97661e-5,9.55475,0.055546,-9.499e-9,316.9670,0.0334442282]};
@@ -1542,7 +1543,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
      ${box('💎 शुभ वस्तु र सामान्य उपाय',`<ul class="kl-ul"><li><b>लग्नेश ${PL[lord][0]}:</b> सम्बन्धित रत्न ${gm[0]}, शुभ दिन ${gm[1]}, शुभ रङ्ग ${gm[2]}।</li><li><b>सामान्य उपाय:</b> आफ्नो लग्नेशको दिनमा सफा लुगा लगाउने, दान-दक्षिणा दिने, बुबाआमा र गुरुको आशीर्वाद लिने, र नियमित ध्यान गर्नु उपयोगी मानिन्छ।</li><li><b>सावधानी:</b> रत्न वा कडा उपाय गर्नुअघि अनुभवी ज्योतिषीसँग परामर्श गर्नुहोस्।</li></ul>`)}
      <p class="kl-no">📍 लाहिरी अयनांश ${nd(r.ay.toFixed(2))}° · पूरै राशि भाव प्रणाली · गणना खगोलीय सूत्रबाट अनुमानित हो (केही मिनेटसम्म फरक पर्न सक्छ)। यो मनोरञ्जन तथा सामान्य जानकारीका लागि हो। विवाह, मुहूर्त जस्ता ठूला निर्णयका लागि अनुभवी ज्योतिषीसँग परामर्श गर्नुहोस्।</p>`;
     return body}
-  const tzOff=z=>z*36e5;
+  const tzOff=z=>z*36e5;window.JPC=calc;
   const PCSS=`:root{--p:#6d28d9;--s:#be185d;--text:#111;--dim:#555;--bd:#ddd;--card:#fff;--l:#4d7c0f}body{font-family:'Noto Sans Devanagari','Mangal',Arial,sans-serif;color:#111;margin:0;line-height:1.6}h1{text-align:center;color:#6d28d9;margin:0 0 4px;font-size:22px}h3{color:#6d28d9;margin:14px 0 6px;border-bottom:2px solid #ddd;padding-bottom:3px;font-size:16px}h4{text-align:center;margin:0 0 4px;font-size:13px}.kl-box{margin-bottom:10px;page-break-inside:avoid}.kl-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.kl-sum div{border:1px solid #ccc;border-radius:8px;padding:6px;text-align:center}.kl-sum small{display:block;color:#666;font-size:11px}.kl-sum b{font-size:15px}.kl-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kl-svg{width:100%}.kl-svg .ln{stroke:#6d28d9;stroke-width:1.5;fill:none}.kl-svg .n{fill:#777;font:600 11px Arial;text-anchor:middle}.kl-svg .g{fill:#111;font:700 12px Arial;text-anchor:middle}.kl-svg .lg2{fill:#be185d}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:4px 6px;text-align:left}th{background:#f3f0ff}tr.cu td{background:#ecfccb}.kl-no{font-size:11px;color:#555}ul{padding-left:0;list-style:none;margin:0;font-size:12.5px}li{padding:3px 0;border-bottom:1px dashed #ddd}.kl-ok{color:#4d7c0f}.grad{color:#6d28d9}.ft{text-align:center;font-size:11px;color:#777;margin-top:10px}@page{size:A4;margin:12mm}`;
   let LAST='';
   function printPdf(){
@@ -1595,7 +1596,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
 })();
 
 </script>
-<script src="jyotish-plus.js?v=9"></script>
+<script src="jyotish-plus.js?v=10"></script>
 
 <!-- राइट क्लिक र भ्यू सोर्स रोक्ने सुरक्षा कोड यहाँ राख्नुहोस् -->
 <script>
