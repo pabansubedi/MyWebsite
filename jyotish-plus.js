@@ -15,7 +15,7 @@ function parseD(t,cal){const s=String(t||'').trim().replace(/[०-९]/g,c=>'०
 const ENM=['January','February','March','April','May','June','July','August','September','October','November','December'],ENW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const enD=(y,m,d)=>d+' '+ENM[m-1]+' '+y,enL=(y,m,d)=>ENW[adWd(y,m,d)]+', '+enD(y,m,d);
 const todayAD=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kathmandu'}).format(new Date()).split('-').map(Number);
-window.JP={ad2bs,bs2ad,bsTxt,parseD,enD,enL,adWd,todayAD};
+window.JP={ad2bs,bs2ad,bsTxt,parseD,enD,enL,adWd,todayAD};window.JP.panch=panch;
 
 /* ---- top bar: correct BS date ---- */
 const nb=$('npd');
@@ -139,8 +139,8 @@ $('mh-go').onclick=()=>{
   if(!Rl.nk.includes(p.nk)||!Rl.tt.includes(tt)||!Rl.wd.includes(wd))continue;
   if(Rl.sh&&p.t>15&&tt>5)continue;
   if(Rl.ex){const ch=(p.lm===3&&p.t>=11)||[4,5,6].includes(p.lm)||(p.lm===7&&p.t<=11);if(ch||p.sun===8||p.sun===11)continue}
-  rows.push(`<tr><td>${bsTxt(ad2bs(...ad))}</td><td>${enD(ad[0],ad[1],ad[2])}</td><td>${WN[wd]}</td><td>${pk(p.t)} ${tn(p.t)}</td><td>${NK[p.nk]}</td></tr>`)}
- $('mh-out').innerHTML=`<div class="kl-box"><h3>🕉️ सम्भावित शुभ दिन (${NDG(rows.length)})</h3>${rows.length?`<div class="kl-tw"><table class="kl-t"><tr><th>मिति (वि.सं.)</th><th>AD</th><th>वार</th><th>तिथि</th><th>नक्षत्र</th></tr>${rows.join('')}</table></div>`:'<p style="color:var(--dim)">यो अवधिमा सबै नियम मिल्ने दिन फेला परेन। अवधि बढाएर हेर्नुहोस्।</p>'}</div><p class="kl-no">नोट: यो सामान्य शास्त्रीय नियम (शुभ तिथि, नक्षत्र, वार; चातुर्मास र खरमास छोडेर) अनुसार सम्भावित दिनको सूची हो। लग्न, शुद्धि, कुण्डली मिलान र स्थानीय परम्परा मिलाएर अन्तिम मुहूर्त अनुभवी पण्डित/ज्योतिषीसँग पक्का गर्नुहोस्।</p>`};
+  rows.push(`<tr><td>${bsTxt(ad2bs(...ad))}</td><td>${enD(ad[0],ad[1],ad[2])}</td><td>${WN[wd]}</td><td>${pk(p.t)} ${tn(p.t)}</td><td>${NK[p.nk]}</td><td>${window.JLG?window.JLG(ad,$('mh-t').value):''}</td></tr>`)}
+ $('mh-out').innerHTML=`<div class="kl-box"><h3>🕉️ सम्भावित शुभ दिन (${NDG(rows.length)})</h3>${rows.length?`<div class="kl-tw"><table class="kl-t"><tr><th>मिति (वि.सं.)</th><th>AD</th><th>वार</th><th>तिथि</th><th>नक्षत्र</th><th>शुभ लग्न समय (काठमाडौँ)</th></tr>${rows.join('')}</table></div>`:'<p style="color:var(--dim)">यो अवधिमा सबै नियम मिल्ने दिन फेला परेन। अवधि बढाएर हेर्नुहोस्।</p>'}</div><p class="kl-no">नोट: यो सामान्य शास्त्रीय नियम (शुभ तिथि, नक्षत्र, वार; चातुर्मास र खरमास छोडेर) अनुसार सम्भावित दिनको सूची हो। लग्न, शुद्धि, कुण्डली मिलान र स्थानीय परम्परा मिलाएर अन्तिम मुहूर्त अनुभवी पण्डित/ज्योतिषीसँग पक्का गर्नुहोस्।</p>`};
 
 /* ---- Kundali Milan ---- */
 const VN=['शूद्र','वैश्य','क्षत्रिय','ब्राह्मण'],VG=['चतुष्पद','मानव','जलचर','वनचर','कीट'],GN=['देव','मनुष्य','राक्षस'],NDN=['आदि','मध्य','अन्त्य'],YN=['घोडा','हात्ती','भेडा','सर्प','कुकुर','बिरालो','मुसा','गाई','भैँसी','बाघ','मृग','बाँदर','न्याउरीमुसा','सिंह'],PN7=['सूर्य','चन्द्र','मंगल','बुध','गुरु','शुक्र','शनि'];
@@ -409,13 +409,13 @@ $('nm-o').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!
 const mb=$('crs-mb');
 if(mb){
  new MutationObserver(()=>{if(!mb.querySelector('[data-my]')||mb.querySelector('.shr'))return;const nv=mb.querySelector('.crs-nav');if(!nv)return;
-  nv.insertAdjacentHTML('afterend','<div class="crs-nav shr" style="margin-top:.7rem"><button type="button" data-sh="wa" style="background:#25d366;border-color:#25d366;color:#fff">💬 WhatsApp मा शेयर</button><button type="button" data-sh="fb" style="background:#1877f2;border-color:#1877f2;color:#fff">📘 Facebook मा शेयर</button>'+(navigator.share?'<button type="button" data-sh="nt">📤 अन्य</button>':'')+'</div>')}).observe(mb,{childList:true});
+  nv.insertAdjacentHTML('afterend','<div class="crs-nav shr" style="margin-top:.7rem"><button type="button" data-sh="wa" style="background:#25d366;border-color:#25d366;color:#fff">💬 WhatsApp मा शेयर</button><button type="button" data-sh="fb" style="background:#1877f2;border-color:#1877f2;color:#fff">📘 Facebook मा शेयर</button><button type="button" data-sh="img">🖼 फोटो कार्ड</button>'+(navigator.share?'<button type="button" data-sh="nt">📤 अन्य</button>':'')+'</div>')}).observe(mb,{childList:true});
  mb.addEventListener('click',e=>{const b=e.target.closest('[data-sh]');if(!b)return;
-  const g=s=>{const x=mb.querySelector(s);return x?x.textContent.replace(/\s+/g,' ').trim():''},u=/^https?:/.test(location.href)?location.origin+location.pathname+'#jyotish':'https://pabansubedi.com.np/#jyotish',
+  const g=s=>{const x=mb.querySelector(s);return x?x.textContent.replace(/\s+/g,' ').trim():''},u=/^https?:/.test(location.href)?location.origin+location.pathname+'?rashi='+((mb.querySelector('[data-my]')||{dataset:{}}).dataset.my||0)+'#jyotish':'https://pabansubedi.com.np/#jyotish',
   t='🌟 '+g('h3')+' — '+g('.crs-meta span').replace(/^📅\s*/,'')+'\n'+g('.crs-sum')+'\n'+g('.rs-ch')+'\n\n👉 आफ्नो राशिफल यहाँ हेर्नुहोस्: '+u,k=b.dataset.sh;
   if(k==='wa')window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener');
   else if(k==='fb')window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(u)+'&quote='+encodeURIComponent(t),'_blank','noopener');
-  else if(navigator.share)navigator.share({text:t}).catch(()=>{})})}
+  else if(k==='img'){if(window.JCARD)window.JCARD(mb,u)}else if(navigator.share)navigator.share({text:t}).catch(()=>{})})}
 
 /* ---- धेरै कुण्डली सेभ (यही ब्राउजरमा) ---- */
 const kf=$('kl-f'),kd=$('kl-d'),ko=$('kl-out'),pv=document.querySelector('.kl-pv');
@@ -435,4 +435,93 @@ if(kf&&ko){
   bar.insertAdjacentHTML('afterbegin','<button type="button" id="kl-svb">💾 यो कुण्डली सेभ गर्नुहोस्</button>');
   $('kl-svb').onclick=e=>{if(!cur)return;const a=ld().filter(k=>!(k.n===cur.n&&k.d===cur.d&&k.t===cur.t&&k.p===cur.p));a.unshift(cur);if(a.length>30)a.length=30;e.target.textContent=sv(a)?'✅ सेभ भयो':'⚠ सेभ गर्न सकिएन';list()}}).observe(ko,{childList:true});
  list()}
+})();
+
+/* =====================================================================
+   PLUS 4: मुहूर्त लग्न, वार्षिक सूची (एकादशी/औँसी/सङ्क्रान्ति/ग्रहण), जन्मदिन-श्राद्ध, सेभ कुण्डली मिलान,
+   कुण्डली लिङ्क, राशिफल फोटो कार्ड, PWA
+   ===================================================================== */
+(function(){
+const $=id=>document.getElementById(id),JP=window.JP,JC=window.JPC,jf=$('jt-f'),anc=$('jt-nm');if(!JP||!JC||!jf||!anc)return;
+const ND=s=>String(s).replace(/\d/g,d=>'०१२३४५६७८९'[d]),pad=n=>String(n).padStart(2,'0'),box=(t,b)=>`<div class="kl-box"><h3>${t}</h3>${b}</div>`;
+const SG=['मेष','वृष','मिथुन','कर्कट','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुम्भ','मीन'],WS=['आइत','सोम','मंगल','बुध','बिहि','शुक्र','शनि'],R=Math.PI/180,nm=x=>((x%360)+360)%360,sn=x=>Math.sin(x*R),cs=x=>Math.cos(x*R);
+const ft=x=>{x=Math.round(x);const h=Math.floor(x/60)%24,m=x%60;return ND(h%12||12)+':'+ND(pad(m))+' '+(h<4?'राति':h<12?'बिहान':h<16?'दिउँसो':h<19?'साँझ':'राति')};
+const ld=()=>{try{return JSON.parse(localStorage.getItem('jpKundali')||'[]')}catch(e){return[]}},dA=ms=>{const d=new Date(ms);return[d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()]};
+
+/* ---- मुहूर्तमा शुभ लग्न समय (काठमाडौँ) ---- */
+const GB=[1,2,3,5,6,7,8,11],GD=[1,2,3,5,6,8,11];
+window.JLG=(ad,ty)=>{const ok=ty==='b'?GB:GD,la=27.7172,lo=85.324,base=Date.UTC(ad[0],ad[1]-1,ad[2])-5.75*36e5,out=[];let c0=-1,st=0;
+ for(let m=240;m<=1680;m+=5){const jd=(base+m*6e4)/864e5+2440587.5,ay=23.85306+0.013969*(jd-2451545)/365.25,rm=nm(280.46061837+360.98564736629*(jd-2451545)+lo),ep=23.4393-3.563e-7*(jd-2451543.5),s=Math.floor(nm(Math.atan2(cs(rm),-(sn(rm)*cs(ep)+Math.tan(la*R)*sn(ep)))/R-ay)/30);
+  if(s!==c0){if(c0>=0&&ok.includes(c0))out.push(SG[c0]+': '+ft(st)+'–'+ft(m));c0=s;st=m}}
+ if(ok.includes(c0))out.push(SG[c0]+': '+ft(st)+'–'+ft(1680));return out.join('<br>')||'—'};
+
+/* ---- नयाँ ट्याब: वार्षिक सूची, जन्मदिन/श्राद्ध ---- */
+const tb=JP.ad2bs(...JP.todayAD())||[2083];
+jf.insertAdjacentHTML('beforeend','<button data-jt="yr" role="tab">🗓 वार्षिक सूची</button><button data-jt="rm" role="tab">🎂 जन्मदिन / श्राद्ध</button>');
+anc.insertAdjacentHTML('afterend',`<div class="jt-p" id="jt-yr"><p class="rs-top">वर्षभरिका एकादशी, पूर्णिमा, औँसी, सङ्क्रान्ति र सम्भावित ग्रहणका मिति।</p><div class="kl-f"><div><label>वि.सं. वर्ष</label><select id="yr-y">${[-1,0,1,2].map(k=>`<option value="${tb[0]+k}"${k?'':' selected'}>${ND(tb[0]+k)}</option>`).join('')}</select></div><div><label>के हेर्ने?</label><select id="yr-t"><option value="ek">एकादशी</option><option value="pa">पूर्णिमा र औँसी</option><option value="sk">सङ्क्रान्ति</option><option value="ec">ग्रहण (अनुमानित)</option></select></div><button class="btn bp wide" type="button" id="yr-b">🗓 सूची हेर्नुहोस्</button></div><div class="kl-out" id="yr-o"></div></div>
+<div class="jt-p" id="jt-rm"><p class="rs-top">परिवारका जन्मदिन (वि.सं. अनुसार) र श्राद्ध तिथि (मृत्यु मितिको तिथि अनुसार) को अर्को मिति हेर्नुहोस्। यही ब्राउजरमा मात्र सेभ हुन्छ।</p><div class="kl-f"><div><label>नाम</label><input id="rm-n" placeholder="जस्तै: बुबा"></div><div><label>प्रकार</label><select id="rm-t"><option value="b">🎂 जन्मदिन</option><option value="s">🕯 श्राद्ध तिथि</option></select></div><div><label>मितिको प्रकार</label><select id="rm-c"><option value="BS">विक्रम सम्वत् (BS)</option><option value="AD">अंग्रेजी (AD)</option></select></div><div><label>जन्म / मृत्यु मिति (YYYY-MM-DD)</label><input id="rm-d" placeholder="2055-01-29"></div><button class="btn bp wide" type="button" id="rm-b">➕ थप्नुहोस्</button></div><div class="kl-out" id="rm-o"></div></div>`);
+jf.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const t=b.dataset.jt;['yr','rm'].forEach(k=>$('jt-'+k).classList.toggle('on',t===k));if(t==='rm')rmR();mlRef()});
+
+/* ---- वार्षिक सूची ---- */
+const sgAt=ms=>{const d=new Date(ms);return Math.floor(JC(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes(),0,0,0).sid[0]/30)},
+ elf=ms=>{const d=new Date(ms),r=JC(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes(),0,0,0);return nm(r.sid[1]-r.sid[0])},
+ bis=(f,lo,hi)=>{for(let i=0;i<14;i++){const m=(lo+hi)/2;f(m)?hi=m:lo=m}return hi};
+$('yr-b').onclick=()=>{const Y=+$('yr-y').value,ty=$('yr-t').value,o=$('yr-o'),a=JP.bs2ad(Y,1,1),b=JP.bs2ad(Y+1,1,1),S=Date.UTC(a[0],a[1]-1,a[2]),n=Math.round((Date.UTC(b[0],b[1]-1,b[2])-S)/864e5),L=[],D=864e5,H=5.75*36e5;
+ const row=(ad,z,tm)=>{const bb=JP.ad2bs(...ad);return `<tr><td>${bb?JP.bsTxt(bb):''} (${WS[JP.adWd(...ad)]})</td><td>${JP.enD(...ad)}${tm?' · '+tm:''}</td><td>${z}</td></tr>`};
+ if(ty==='ek'||ty==='pa'){let ln='',li=-9;for(let i=0;i<n;i++){const ad=dA(S+i*D),p=JP.panch(ad[0],ad[1],ad[2],ty==='ek'?6:12);let z='';
+   if(ty==='ek'&&p.t%15===11)z=(p.t<15?'शुक्ल':'कृष्ण')+' एकादशी';if(ty==='pa'&&p.t===15)z='पूर्णिमा';if(ty==='pa'&&p.t===30)z='औँसी';
+   if(z&&!(z===ln&&i-li<=1))L.push(row(ad,z));if(z){ln=z;li=i}}}
+ else if(ty==='sk'){for(let t=S-H;t<S-H+n*D;t+=D){const s0=sgAt(t),s1=sgAt(t+D);if(s0!==s1){const ms=bis(m=>sgAt(m)!==s0,t,t+D),l=new Date(ms+H);L.push(row(dA(ms+H),(s1===9?'माघे सङ्क्रान्ति (मकर)':SG[s1]+' सङ्क्रान्ति'),ft(l.getUTCHours()*60+l.getUTCMinutes())))}}}
+ else{let pv=elf(S-H);for(let t=S-H+216e5;t<S-H+n*D;t+=216e5){const cu=elf(t),nw=pv>300&&cu<60,fl=pv<180&&cu>=180;
+   if(nw||fl){const ms=bis(m=>nw?elf(m)<180:elf(m)>=180,t-216e5,t),d=new Date(ms),r=JC(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes(),0,0,0),x=nm(r.sid[0]-r.sid[7])%180,dd=Math.min(x,180-x),l=new Date(ms+H);
+    if(nw&&dd<=15)L.push(row(dA(ms+H),'🌑 सूर्यग्रहण (सम्भावित)',ft(l.getUTCHours()*60+l.getUTCMinutes())));if(fl&&dd<=11.5)L.push(row(dA(ms+H),'🌕 चन्द्रग्रहण (सम्भावित)',ft(l.getUTCHours()*60+l.getUTCMinutes())))}pv=cu}}
+ o.innerHTML=box($('yr-t').selectedOptions[0].textContent+' — '+ND(Y)+' ('+ND(L.length)+')',L.length?`<div class="kl-tw"><table class="kl-t" style="min-width:420px"><tr><th>मिति (वि.सं.)</th><th>AD</th><th>विवरण</th></tr>${L.join('')}</table></div>`:'<p style="color:var(--dim)">यो वर्ष केही फेला परेन।</p>')+
+ '<p class="kl-no">'+(ty==='ec'?'ग्रहण चन्द्रमा-सूर्य र राहु-केतुको दूरीबाट अनुमान गरिएको हो; नेपालमा देखिने/नदेखिने र प्रकार (पूर्ण/आंशिक) आधिकारिक पात्रोबाट पक्का गर्नुहोस्। ':'')+'तिथि/क्षण खगोलीय गणनाबाट अनुमानित हो (१ दिनसम्म फरक पर्न सक्छ); आधिकारिक पात्रो र सरकारी बिदा सूची हेरेर पक्का गर्नुहोस्।</p>'};
+
+/* ---- जन्मदिन / श्राद्ध ---- */
+const RK='jpRem',rl=()=>{try{return JSON.parse(localStorage.getItem(RK)||'[]')}catch(e){return[]}},rs=a=>{try{localStorage.setItem(RK,JSON.stringify(a))}catch(e){}},cc={};
+function nxt(r){const t=JP.todayAD(),T=Date.UTC(t[0],t[1]-1,t[2]),key=r.n+r.d+r.t+T;if(cc[key]!==undefined)return cc[key];const a=r.d.split('-').map(Number);let res=null;
+ if(r.t==='b'){const b=JP.ad2bs(...a),q=JP.ad2bs(...t);if(b&&q)for(let y=q[0];y<=Math.min(q[0]+1,2098);y++){const x=JP.bs2ad(y,b[1],b[2]);if(Date.UTC(x[0],x[1]-1,x[2])>=T){res=x;break}}}
+ else{const p0=JP.panch(a[0],a[1],a[2],12);for(let i=0;i<400;i++){const x=dA(T+i*864e5),p=JP.panch(x[0],x[1],x[2],12);if(p.t===p0.t&&p.lm===p0.lm){res=x;break}}}
+ return cc[key]=res}
+function rmR(){const a=rl(),o=$('rm-o'),t=JP.todayAD(),T=Date.UTC(t[0],t[1]-1,t[2]);if(!a.length){o.innerHTML='';return}
+ const rows=a.map((r,i)=>{const x=nxt(r),dl=x?Math.round((Date.UTC(x[0],x[1]-1,x[2])-T)/864e5):null;return{i,r,x,dl}}).sort((p,q)=>(p.dl===null)-(q.dl===null)||p.dl-q.dl).map(({i,r,x,dl})=>`<tr><td>${r.n||'नाम नराखिएको'}</td><td>${r.t==='b'?'🎂 जन्मदिन':'🕯 श्राद्ध'}</td><td>${x?JP.bsTxt(JP.ad2bs(...x))+' ('+WS[JP.adWd(...x)]+')':'—'}</td><td>${dl===null?'—':dl===0?'<b class="kl-ok">आज!</b>':ND(dl)+' दिन बाँकी'}</td><td><button type="button" data-x="${i}" style="padding:.3rem .7rem;border-radius:100px;border:1px solid var(--bd);background:var(--card);color:var(--text)">🗑</button></td></tr>`).join('');
+ o.innerHTML=box('📅 आउँदा मितिहरू',`<div class="kl-tw"><table class="kl-t" style="min-width:420px"><tr><th>नाम</th><th>प्रकार</th><th>अर्को मिति</th><th>बाँकी</th><th></th></tr>${rows}</table></div>`)+'<p class="kl-no">श्राद्ध तिथि मृत्यु मितिको तिथि र चान्द्र मास (मध्याह्न अनुसार) बाट अनुमान गरिएको हो। श्राद्धको अन्तिम मिति पण्डित/आधिकारिक पात्रोसँग पक्का गर्नुहोस्।</p>'}
+$('rm-b').onclick=()=>{const d=JP.parseD($('rm-d').value,$('rm-c').value),o=$('rm-o');if(!d){o.innerHTML='<div class="kl-box">कृपया सही मिति हाल्नुहोस् (जस्तै 2055-01-29)।</div>';return}
+ const a=rl();a.push({n:$('rm-n').value.trim(),t:$('rm-t').value,d:d[0]+'-'+pad(d[1])+'-'+pad(d[2])});rs(a.slice(-30));$('rm-n').value='';$('rm-d').value='';rmR()};
+$('rm-o').addEventListener('click',e=>{const b=e.target.closest('[data-x]');if(!b)return;const a=rl();a.splice(+b.dataset.x,1);rs(a);rmR()});
+
+/* ---- सेभ गरेका कुण्डली बीच मिलान ---- */
+const mf=$('ml-f');
+window.mlRef=()=>{};
+if(mf){mf.insertAdjacentHTML('beforebegin','<div class="kl-f" id="ml-sv" style="display:none"><div><label>वर — सेभ गरेकोबाट</label><select id="ml-sb"></select></div><div><label>वधू — सेभ गरेकोबाट</label><select id="ml-sg"></select></div><button type="button" class="btn bp wide" id="ml-sgo">💞 सेभ गरेका दुईको मिलान हेर्नुहोस्</button></div>');
+ window.mlRef=()=>{const a=ld(),s=$('ml-sv');s.style.display=a.length>=2?'':'none';const op=a.map((k,i)=>`<option value="${i}">${k.n||'नाम नराखिएको'} · ${k.d}</option>`).join('');$('ml-sb').innerHTML=op;$('ml-sg').innerHTML=op;if(a.length>1)$('ml-sg').value=1};
+ const fl=(w,k)=>{$('ml-'+w+'-n').value=k.n;$('ml-'+w+'-c').value='AD';$('ml-'+w+'-d').value=k.d;$('ml-'+w+'-t').value=k.t;const x=[...$('ml-'+w+'-p').options].findIndex(o=>o.textContent===k.p);if(x>=0)$('ml-'+w+'-p').value=x};
+ $('ml-sgo').onclick=()=>{const a=ld(),b=a[+$('ml-sb').value],g=a[+$('ml-sg').value];if(!b||!g)return;fl('b',b);fl('g',g);mf.requestSubmit?mf.requestSubmit():mf.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}))};
+ const sb=$('jsb-kl');if(sb)sb.addEventListener('click',()=>window.mlRef());window.mlRef()}
+
+/* ---- कुण्डली लिङ्क शेयर र लिङ्कबाट खोल्ने ---- */
+const kf=$('kl-f'),ko=$('kl-out'),kd=$('kl-d');
+if(kf&&ko){
+ const fillK=k=>{$('kl-nm').value=k[0]||'';const c=$('kl-cal');if(c){c.value='AD';c.dispatchEvent(new Event('change'))}kd.value=k[1];$('kl-t').value=k[2];const p=$('kl-p'),x=[...p.options].findIndex(o=>o.textContent===k[3]);p.value=x<0?p.options.length-1:x;p.dispatchEvent(new Event('change'));$('kl-la').value=k[4]||'';$('kl-lo').value=k[5]||'';$('kl-tz').value=k[6]||'';kf.requestSubmit?kf.requestSubmit():kf.dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}))};
+ new MutationObserver(()=>{const bar=ko.querySelector('.kl-bar');if(!bar||bar.querySelector('#kl-lk'))return;bar.insertAdjacentHTML('beforeend','<button type="button" id="kl-lk">🔗 लिङ्क शेयर</button>');
+  $('kl-lk').onclick=e=>{const k=[$('kl-nm').value.trim(),kd.value,$('kl-t').value,$('kl-p').selectedOptions[0].textContent,$('kl-la').value,$('kl-lo').value,$('kl-tz').value],u=(/^https?:/.test(location.href)?location.origin+location.pathname:'https://pabansubedi.com.np/')+'?k='+encodeURIComponent(k.join('|'));
+   if(navigator.share)navigator.share({title:'जन्म कुण्डली',url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).then(()=>{e.target.textContent='✅ लिङ्क कपी भयो (यसमा जन्म विवरण हुन्छ)'},()=>prompt('लिङ्क कपी गर्नुहोस्:',u));else prompt('लिङ्क कपी गर्नुहोस्:',u)}}).observe(ko,{childList:true});
+ const q=new URLSearchParams(location.search);
+ setTimeout(()=>{const k=q.get('k'),r=q.get('rashi');
+  if(k){const a=k.split('|');if(a[1]&&a[2]){jf.querySelector('[data-jt="kl"]').click();fillK(a)}}
+  else if(r!==null&&/^\d+$/.test(r)&&+r<12){jf.querySelector('[data-jt="rs"]').click();const c=document.querySelector('#rs-g [data-rs="'+r+'"]');if(c){scrollTo({top:$('jyotish').offsetTop-100});c.click()}}},3200)}
+
+/* ---- राशिफल फोटो कार्ड ---- */
+window.JCARD=(mb,u)=>{const g=s=>{const x=mb.querySelector(s);return x?x.textContent.replace(/\s+/g,' ').trim():''},c=document.createElement('canvas');c.width=c.height=1080;const x=c.getContext('2d'),F='"Noto Sans Devanagari","Mangal",system-ui,sans-serif',gr=x.createLinearGradient(0,0,1080,1080);
+ gr.addColorStop(0,'#4c1d95');gr.addColorStop(.55,'#9d174d');gr.addColorStop(1,'#0e7490');x.fillStyle=gr;x.fillRect(0,0,1080,1080);x.textAlign='center';x.fillStyle='#fff';
+ const wr=(t,y,w,lh,mx)=>{let l='',n=0;for(const wd of t.split(' ')){const s=l?l+' '+wd:wd;if(x.measureText(s).width>w&&l){x.fillText(l,540,y+n*lh);n++;l=wd;if(n>=mx)return}else l=s}if(l&&n<mx)x.fillText(l,540,y+n*lh)};
+ x.font='190px '+F;x.fillText(g('.crs-bi'),540,250);x.font='bold 76px '+F;x.fillText(g('h3').replace(/\s+[A-Za-z].*$/,''),540,370);
+ x.font='30px '+F;x.globalAlpha=.85;wr(g('.crs-meta span').replace(/^📅\s*/,''),425,900,40,2);x.globalAlpha=1;
+ x.font='46px '+F;wr(g('.crs-sum'),560,900,66,6);x.font='32px '+F;wr(g('.rs-ch'),930,940,42,2);x.font='bold 34px '+F;x.fillText(u.replace(/^https?:\/\//,'').replace(/[?#].*$/,''),540,1030);
+ c.toBlob(b=>{const f=new File([b],'rashifal.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],text:u}).catch(()=>{});else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='rashifal.png';a.click()}})};
+
+/* ---- PWA ---- */
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;const f=document.querySelector('.ft');if(f&&!$('pwa-b')){f.insertAdjacentHTML('beforeend','<button type="button" id="pwa-b" class="btn bp" style="padding:.6rem 1.2rem">📲 फोनमा एप install</button>');$('pwa-b').onclick=()=>{dp.prompt();dp=null;$('pwa-b').remove()}}});
 })();

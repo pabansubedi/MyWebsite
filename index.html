@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#08080c">
+<meta name="theme-color" content="#08080c"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
 <title>Paban Subedi</title>
 <meta name="description" content="Paban Subedi — Digital Marketer, IT Professional & Computer Instructor from Jhapa, Nepal.">
 <link rel="canonical" href="https://pabansubedi.com.np/">
@@ -686,7 +686,7 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
     <div class="sh fu"><div class="st">Jyotish</div><h2>ज्योतिष: <span class="grad">राशिफल, कुण्डली र पात्रो</span></h2></div>
     <div class="crs-f" id="jt-f" role="tablist"><button class="on" data-jt="rs" role="tab">🌟 राशिफल</button><button data-jt="kl" role="tab">🔮 कुण्डली र मिलान</button><button data-jt="pt" role="tab">📅 पात्रो र मुहूर्त</button></div>
     <div class="jt-p on" id="jt-rs"><p class="rs-top">बाह्रै राशिको राशिफल — हरेक दिन आफैँ नयाँ हुन्छ। आफ्नो राशिमा क्लिक गरेर पूरा हेर्नुहोस्, र ☆ थिचेर "मेरो राशि" सेट गर्नुहोस्।</p>
-    <div class="crs-f" id="rs-per"><button class="on" data-p="d">दैनिक</button><button data-p="w">साप्ताहिक</button><button data-p="m">मासिक</button></div>
+    <div class="crs-f" id="rs-per"><button class="on" data-p="d">दैनिक</button><button data-p="w">साप्ताहिक</button><button data-p="m">मासिक</button><button data-p="y">वार्षिक</button></div>
     <div class="rs-dt" id="rs-date"></div>
     <div class="rs-g" id="rs-g"></div></div>
     <div class="jt-p" id="jt-kl"><form class="kl-f" id="kl-f" autocomplete="off">
@@ -1409,7 +1409,7 @@ function showCourse(i){
   const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
   const dayKey=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kathmandu'}).format(new Date());
   const stars=n=>'★'.repeat(n)+'☆'.repeat(5-n);
-  let PER='d';const pkey=()=>{const k=dayKey();if(PER==='d')return k;const [y,m,d]=k.split('-').map(Number);if(PER==='m')return 'M'+y+'-'+m;const dt=new Date(Date.UTC(y,m-1,d));dt.setUTCDate(dt.getUTCDate()-dt.getUTCDay());return 'W'+dt.toISOString().slice(0,10)};
+  let PER='d';const pkey=()=>{const k=dayKey();if(PER==='d')return k;const [y,m,d]=k.split('-').map(Number);if(PER==='y')return 'Y'+y;if(PER==='m')return 'M'+y+'-'+m;const dt=new Date(Date.UTC(y,m-1,d));dt.setUTCDate(dt.getUTCDate()-dt.getUTCDay());return 'W'+dt.toISOString().slice(0,10)};
   let KEY=pkey();
   function data(i){
     const r=rng(hs(KEY+'|'+i)),pk=a=>a[r()*a.length|0],sr=()=>2+(r()*4|0);
@@ -1418,7 +1418,7 @@ function showCourse(i){
   }
   const g=document.getElementById('rs-g');
   document.getElementById('rs-per').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;PER=b.dataset.p;KEY=pkey();document.querySelectorAll('#rs-per button').forEach(x=>x.classList.toggle('on',x===b));draw()});
-  function dateTxt(){const n=document.getElementById('npd'),en=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kathmandu',day:'numeric',month:'long',year:'numeric'}).format(new Date());return (n&&n.textContent?n.textContent+' • ':'')+en+' • '+({d:'दैनिक',w:'साप्ताहिक',m:'मासिक'})[PER]+' राशिफल'}
+  function dateTxt(){const n=document.getElementById('npd'),en=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kathmandu',day:'numeric',month:'long',year:'numeric'}).format(new Date());return (n&&n.textContent?n.textContent+' • ':'')+en+' • '+({d:'दैनिक',w:'साप्ताहिक',m:'मासिक',y:'वार्षिक'})[PER]+' राशिफल'}
   function draw(){banner();
     document.getElementById('rs-date').textContent='📅 '+dateTxt();
     g.innerHTML=RS.map((r,i)=>{const d=data(i);return `<button class="crs-c" data-rs="${i}" style="--lc:${LC[i]}"><span class="crs-i">${r[1]}</span><h3>${myR()===i?'⭐ ':''}${r[0]}<small>${r[2]}</small></h3><p>${d.g}</p><div class="crs-meta"><span class="rs-st">${stars(d.o)}</span><span>शुभ अङ्क ${d.n}</span></div></button>`}).join('');
@@ -1596,7 +1596,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
 })();
 
 </script>
-<script src="jyotish-plus.js?v=10"></script>
+<script src="jyotish-plus.js?v=11"></script>
 
 <!-- राइट क्लिक र भ्यू सोर्स रोक्ने सुरक्षा कोड यहाँ राख्नुहोस् -->
 <script>
