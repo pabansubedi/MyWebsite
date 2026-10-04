@@ -171,7 +171,7 @@ if(tg){tg.insertAdjacentHTML('afterbegin','<div class="tz-c"><h3>📅 AD ↔ BS 
 const $=id=>document.getElementById(id),Q=s=>document.querySelector(s),QA=s=>[...document.querySelectorAll(s)];
 const ND=s=>String(s).replace(/\d/g,d=>'०१२३४५६७८९'[d]),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
 /* ---- EDIT HERE: CV ma dekhine kura ---- */
-const CFG={edu:[/* ['SLC / SEE','Shree Kuwadi Devi Sec. School','2074'], ['+2','Rastriya Ramaniya Adarsha Sec, School','2077'] */],lang:['Nepali (Native)','English (Professional)'],place:'Jhapa, Nepal'};
+const CFG={edu:[/* ['SLC / SEE','School ko naam','2070'], ['+2','Campus','2072'] */],lang:['Nepali (Native)','English (Professional)'],place:'Jhapa, Nepal'};
 
 /* ---------- CV (print / PDF) ---------- */
 function printCV(){
@@ -180,16 +180,20 @@ function printCV(){
  const sk=QA('#skills .sk').map(s=>`<div class="cs"><h4>${esc(s.querySelector('h3').textContent)}</h4><div>${[...s.querySelectorAll('li')].map(l=>esc(l.textContent)).join(' · ')}</div></div>`).join('');
  const ex=O.map((o,i)=>`<div class="ex"><div class="eh"><b>${esc(o.role)}</b><span>${esc(o.date)}</span></div><div class="eo">${esc(o.org)} — ${esc(o.loc)}</div><p>${esc(EN[i]||o.desc)}</p></div>`).join('');
  const ed=CFG.edu.length?`<h3>Education</h3>${CFG.edu.map(e=>`<div class="eh"><b>${esc(e[0])}${e[1]?' — '+esc(e[1]):''}</b><span>${esc(e[2]||'')}</span></div>`).join('')}`:'';
- const css=`body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;line-height:1.4;font-size:11px}h1{margin:0;font-size:26px;color:#6d28d9;letter-spacing:.5px}.rl{font-size:13px;color:#555;margin:1px 0 4px}.ct{font-size:11px;color:#333;border-bottom:2px solid #6d28d9;padding-bottom:6px;margin-bottom:6px}h3{color:#6d28d9;border-bottom:1px solid #ddd;padding-bottom:2px;margin:9px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:1px}p{margin:0}.ex{margin-bottom:6px;page-break-inside:avoid}.eh{display:flex;justify-content:space-between;gap:8px}.eo{color:#be185d;font-weight:600}.ex p{margin-top:1px;color:#333}.sg{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}.cs h4{margin:0;font-size:11px}.sign{margin-top:8px}.sr{display:flex;justify-content:space-between;align-items:flex-end;margin-top:22px}.sl{border-top:1px solid #111;width:190px;text-align:center;padding-top:3px}@page{size:A4;margin:11mm}`;
+ const css=`body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;line-height:1.4;font-size:11px}h1{margin:0;font-size:26px;color:#6d28d9;letter-spacing:.5px}.rl{font-size:13px;color:#555;margin:1px 0 4px}.ct{font-size:11px;color:#333;border-bottom:2px solid #6d28d9;padding-bottom:6px;margin-bottom:6px}h3{color:#6d28d9;border-bottom:1px solid #ddd;padding-bottom:2px;margin:9px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:1px}p{margin:0}.ex{margin-bottom:6px;page-break-inside:avoid}.eh{display:flex;justify-content:space-between;gap:8px}.eo{color:#be185d;font-weight:600}.ex p{margin-top:1px;color:#333}.sg{display:grid;grid-template-columns:1fr 1fr;gap:5px 14px}.cs h4{margin:0;font-size:11px}.sign{margin-top:8px}.sr{display:flex;justify-content:space-between;align-items:flex-end;margin-top:22px}.sl{border-top:1px solid #111;width:190px;text-align:center;padding-top:3px}@page{size:A4;margin:11mm}@media screen{body{padding:11mm;width:794px;box-sizing:border-box}}`;
  const html=`<h1>Paban Subedi</h1><div class="rl">Digital Marketer • IT Professional • Computer Instructor</div><div class="ct">pabansubedi128@gmail.com &nbsp;|&nbsp; +977 9825928760 &nbsp;|&nbsp; Jhapa, Nepal &nbsp;|&nbsp; pabansubedi.com.np</div>
  <h3>Profile</h3><p>Digital Marketer, IT Professional and Computer Instructor with 7+ years of experience in e-commerce, IT support and ICT education. Skilled in social media promotion, online product listing, system and network administration, and computer training.</p>
  <h3>Experience</h3>${ex}<h3>Skills</h3><div class="sg">${sk}</div>${ed}
  <h3>Languages</h3><p>${CFG.lang.map(esc).join(' &nbsp;•&nbsp; ')}</p>
  <div class="sign"><h3>Declaration</h3><p>I hereby declare that the information given above is true and correct to the best of my knowledge.</p>
  <div class="sr"><div>Date: ____________________<br>Place: ${esc(CFG.place)}</div><div class="sl">Signature<br><b>Paban Subedi</b></div></div></div>`;
- const f=document.createElement('iframe');f.style.cssText='position:fixed;left:-9999px;top:0;width:794px;height:1123px;border:0';document.body.appendChild(f);
- const d=f.contentWindow.document;d.open();d.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paban Subedi — Resume</title><style>${css}</style></head><body>${html}</body></html>`);d.close();
- setTimeout(()=>{const avail=1039,h=d.body.scrollHeight;if(h>avail)d.body.style.zoom=(avail/h).toFixed(3);f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),60000)},500)}
+ const m=document.createElement('div');m.style.cssText='position:fixed;inset:0;z-index:30000;background:rgba(5,5,10,.85);display:flex;flex-direction:column;align-items:center;padding:12px;gap:10px';
+ m.innerHTML='<div style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center"><button type="button" id="cv-p" class="btn bp" style="padding:.7rem 1.4rem">🖨 Print / Save as PDF</button><button type="button" id="cv-x" class="btn bo" style="padding:.7rem 1.4rem;background:var(--bg2)">✕ Close</button></div><div style="flex:1;width:100%;max-width:830px;overflow:auto;background:#fff;border-radius:10px"><iframe id="cv-f" title="Resume preview" style="width:794px;height:1123px;border:0;display:block;margin:0 auto;background:#fff"></iframe></div>';
+ document.body.appendChild(m);const prev=document.body.style.overflow;document.body.style.overflow='hidden';
+ const f=m.querySelector('#cv-f'),d=f.contentWindow.document;d.open();d.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paban Subedi — Resume</title><style>${css}</style></head><body>${html}</body></html>`);d.close();
+ const fit=()=>{const h=d.body.scrollHeight-84;if(h>1039)d.body.style.zoom=(1039/h).toFixed(3)};setTimeout(fit,150);
+ const close=()=>{m.remove();document.body.style.overflow=prev;removeEventListener('keydown',esc)},esc=e=>{if(e.key==='Escape')close()};addEventListener('keydown',esc);
+ m.querySelector('#cv-x').onclick=close;m.querySelector('#cv-p').onclick=()=>{f.contentWindow.focus();f.contentWindow.print()}}
 const cv=$('cv-btn');if(cv)cv.addEventListener('click',e=>{e.stopImmediatePropagation();printCV()},true);
 
 /* ---------- Blog / Tips ---------- */
@@ -297,4 +301,15 @@ function fd(){const P=+$('fd-p').value,r=+$('fd-r').value/100,t=+$('fd-y').value
  document.addEventListener('click',e=>{if(!e.target.closest('.mr'))set(false)});
  sub.addEventListener('click',()=>set(false));
  addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});
+})();
+
+/* ---- Mero Hisab app ---- */
+(function(){
+ const URL='https://script.google.com/macros/s/AKfycbx_2N9Sg71TA1JomN7MikaqXMFQSiW36a4aDmVy1Hpf20u6hV_TSj33-MkHzY9R3FE/exec';
+ const sub=document.querySelector('.mr-m'),ul=document.getElementById('links');
+ const li=document.createElement('li');li.innerHTML='<a href="'+URL+'" target="_blank" rel="noopener">📒 Mero Hisab ↗</a>';
+ (sub||ul).appendChild(li);
+ const tg=document.querySelector('.tz-g'),tf=document.getElementById('tz-f');
+ if(tg&&tf){tf.insertAdjacentHTML('beforeend','<button data-t="app">📒 Mero Hisab</button>');
+  tg.insertAdjacentHTML('beforeend','<div class="tz-c wide" data-g="app" style="display:none;text-align:center"><h3>📒 Mero Hisab</h3><p style="color:var(--dim);line-height:1.7;margin-bottom:1rem">मेरो हिसाब एप नयाँ ट्याबमा खोल्नुहोस्।</p><a class="btn bp" href="'+URL+'" target="_blank" rel="noopener">Mero Hisab खोल्नुहोस् ↗</a></div>')}
 })();
