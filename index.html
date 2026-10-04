@@ -583,7 +583,6 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
 .tz-c summary{cursor:pointer;font-weight:600;list-style:none}.tz-c summary::before{content:'＋ ';color:var(--p)}.tz-c details[open] summary::before{content:'－ '}
 .tz-c details p{color:var(--dim);line-height:1.7;margin-top:.5rem;font-size:.92rem}
 #bk{text-align:left}
-#cv-btn{background:transparent;font-family:inherit;color:var(--text)}
 </style>
 </head>
 <body>
@@ -622,7 +621,6 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
       <div class="btns">
         <a href="#contact" class="btn bp">Get In Touch →</a>
         <a href="#experience" class="btn bo">View My Work</a>
-        <button type="button" class="btn bo" id="cv-btn">📄 Resume (PDF)</button>
       </div>
     </div>
     <div class="hv">
@@ -685,9 +683,9 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
 
 <section id="jyotish">
   <div class="ct">
-    <div class="sh fu"><div class="st">Jyotish</div><h2>ज्योतिष: <span class="grad">राशिफल र कुण्डली</span></h2></div>
-    <div class="crs-f" id="jt-f" role="tablist"><button class="on" data-jt="rs" role="tab">🌟 आजको राशिफल</button><button data-jt="kl" role="tab">🔮 जन्म कुण्डली</button></div>
-    <div class="jt-p on" id="jt-rs"><p class="rs-top">बाह्रै राशिको दैनिक राशिफल — हरेक दिन आफैँ नयाँ हुन्छ। आफ्नो राशिमा क्लिक गरेर पूरा हेर्नुहोस्।</p>
+    <div class="sh fu"><div class="st">Jyotish</div><h2>ज्योतिष: <span class="grad">राशिफल, कुण्डली र पात्रो</span></h2></div>
+    <div class="crs-f" id="jt-f" role="tablist"><button class="on" data-jt="rs" role="tab">🌟 राशिफल</button><button data-jt="kl" role="tab">🔮 कुण्डली र मिलान</button><button data-jt="pt" role="tab">📅 पात्रो र मुहूर्त</button></div>
+    <div class="jt-p on" id="jt-rs"><p class="rs-top">बाह्रै राशिको राशिफल — हरेक दिन आफैँ नयाँ हुन्छ। आफ्नो राशिमा क्लिक गरेर पूरा हेर्नुहोस्, र ☆ थिचेर "मेरो राशि" सेट गर्नुहोस्।</p>
     <div class="crs-f" id="rs-per"><button class="on" data-p="d">दैनिक</button><button data-p="w">साप्ताहिक</button><button data-p="m">मासिक</button></div>
     <div class="rs-dt" id="rs-date"></div>
     <div class="rs-g" id="rs-g"></div></div>
@@ -1419,10 +1417,10 @@ function showCourse(i){
   }
   const g=document.getElementById('rs-g');
   document.getElementById('rs-per').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;PER=b.dataset.p;KEY=pkey();document.querySelectorAll('#rs-per button').forEach(x=>x.classList.toggle('on',x===b));draw()});
-  function dateTxt(){const n=document.getElementById('npd');return (n&&n.textContent?n.textContent+' • ':'')+dayKey()+' • '+({d:'दैनिक',w:'साप्ताहिक',m:'मासिक'})[PER]+' राशिफल'}
-  function draw(){
+  function dateTxt(){const n=document.getElementById('npd'),en=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kathmandu',day:'numeric',month:'long',year:'numeric'}).format(new Date());return (n&&n.textContent?n.textContent+' • ':'')+en+' • '+({d:'दैनिक',w:'साप्ताहिक',m:'मासिक'})[PER]+' राशिफल'}
+  function draw(){banner();
     document.getElementById('rs-date').textContent='📅 '+dateTxt();
-    g.innerHTML=RS.map((r,i)=>{const d=data(i);return `<button class="crs-c" data-rs="${i}" style="--lc:${LC[i]}"><span class="crs-i">${r[1]}</span><h3>${r[0]}<small>${r[2]}</small></h3><p>${d.g}</p><div class="crs-meta"><span class="rs-st">${stars(d.o)}</span><span>शुभ अङ्क ${d.n}</span></div></button>`}).join('');
+    g.innerHTML=RS.map((r,i)=>{const d=data(i);return `<button class="crs-c" data-rs="${i}" style="--lc:${LC[i]}"><span class="crs-i">${r[1]}</span><h3>${myR()===i?'⭐ ':''}${r[0]}<small>${r[2]}</small></h3><p>${d.g}</p><div class="crs-meta"><span class="rs-st">${stars(d.o)}</span><span>शुभ अङ्क ${d.n}</span></div></button>`}).join('');
   }
   function show(i){
     const r=RS[i],d=data(i),row=(t,s,x)=>`<div class="rs-r"><b><span>${t}</span><span class="rs-st">${stars(s)}</span></b><p>${x}</p></div>`;
@@ -1433,12 +1431,16 @@ function showCourse(i){
      <div class="rs-ch"><span>🔢 शुभ अङ्क: <b>${d.n}</b></span><span>🎨 शुभ रङ्ग: <b>${d.c}</b></span><span>⏰ शुभ समय: <b>${d.tm}</b></span></div>
      <div class="crs-tip">💡 <b>आजको सुझाव:</b> ${d.t}</div>
      <p class="rs-no">नोट: यो राशिफल हरेक दिन आफैँ तयार हुने मनोरञ्जन तथा सामान्य मार्गदर्शनको लागि हो। यो वास्तविक ज्योतिषीय गणना होइन, कुनै ठूलो निर्णयको आधार नबनाउनुहोस्।</p>
-     <div class="crs-nav"><button data-rs="${(i+11)%12}">← ${RS[(i+11)%12][0]}</button><button data-rs="${(i+1)%12}">${RS[(i+1)%12][0]} →</button></div>`;
+     <div class="crs-nav"><button data-my="${i}">${myR()===i?'⭐ मेरो राशि (हटाउन थिच्नुहोस्)':'☆ मेरो राशि बनाउनुहोस्'}</button><button data-rs="${(i+11)%12}">← ${RS[(i+11)%12][0]}</button><button data-rs="${(i+1)%12}">${RS[(i+1)%12][0]} →</button></div>`;
     document.getElementById('crs-b').scrollTop=0;
   }
   function open(i,el){crsLast=el||crsLast;show(i);crsM.classList.add('on');document.body.style.overflow='hidden';document.getElementById('crs-x').focus({preventScroll:true})}
+  g.insertAdjacentHTML('beforebegin','<div class="tz-r" id="rs-my" style="display:none;margin:0 0 1.2rem"></div>');
+  const myR=()=>{try{const v=localStorage.getItem('myRashi');return v===null?-1:+v}catch(e){return -1}},setMy=i=>{try{i<0?localStorage.removeItem('myRashi'):localStorage.setItem('myRashi',i)}catch(e){}};
+  function banner(){const m=myR(),bx=document.getElementById('rs-my');if(m<0||!RS[m]){bx.style.display='none';return}const d=data(m);bx.style.display='block';bx.innerHTML=`⭐ <b>मेरो राशि: ${RS[m][0]} ${RS[m][1]}</b> — ${d.g} <span style="color:var(--dim)">(${stars(d.o)})</span>`}
   g.addEventListener('click',e=>{const b=e.target.closest('[data-rs]');if(b)open(+b.dataset.rs,b)});
   crsMB.addEventListener('click',e=>{const b=e.target.closest('[data-rs]');if(b)show(+b.dataset.rs)});
+  crsMB.addEventListener('click',e=>{const m=e.target.closest('[data-my]');if(m){const i=+m.dataset.my;setMy(myR()===i?-1:i);draw();show(i)}});
   draw();setTimeout(()=>{document.getElementById('rs-date').textContent='📅 '+dateTxt()},1200);
   /* auto-refresh when the (Nepal) day changes while the page is open */
   setInterval(()=>{const k=pkey();if(k!==KEY){KEY=k;draw()}else{document.getElementById('rs-date').textContent='📅 '+dateTxt()}},30000);
@@ -1527,7 +1529,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
     const gm=GEM[Math.min(lord,6)],nav=r.sid.map(x=>Math.floor(x*9/30)%12),nas=Math.floor(r.asc*9/30)%12;
     const mt=new Date(r.ms+tzOff(M.tz));
     const body=`<h1 class="grad" style="text-align:center;font-family:Syne,sans-serif;font-size:1.6rem;margin-bottom:.3rem">${M.name?M.name+' को ':''}जन्म कुण्डली</h1>
-     <p class="kl-no" style="margin-bottom:1.2rem">जन्म मिति: ${nd(M.d)} (AD) · समय: ${nd(M.t)} · स्थान: ${M.place} · ${nd(tzs(M.tz))}</p>
+     <p class="kl-no" style="margin-bottom:1.2rem">जन्म मिति: ${M.en} (AD)${M.bs?' / '+M.bs+' (वि.सं.)':''} · समय: ${nd(M.t)} · स्थान: ${M.place} · ${nd(tzs(M.tz))}</p>
      <div class="kl-sum"><div><small>लग्न</small><b class="grad">${SG[as]}</b></div><div><small>लग्नेश</small><b class="grad">${PL[lord][0]}</b></div><div><small>चन्द्र राशि</small><b class="grad">${SG[ms]}</b></div><div><small>नक्षत्र (पाद)</small><b class="grad">${NK[ni]} (${nd(pada)})</b></div><div><small>नक्षत्र स्वामी</small><b class="grad">${DL[ni%9]}</b></div><div><small>सूर्य राशि</small><b class="grad">${SG[sg[0]]}</b></div></div>
      ${box('🔮 कुण्डली चार्ट',`<div class="kl-2"><div><h4>लग्न कुण्डली (D1)</h4>${chart(sg,as)}</div><div><h4>नवांश कुण्डली (D9)</h4>${chart(nav,nas)}</div></div><p class="kl-no" style="margin-top:.8rem">ल = लग्न · कुनामा लेखिएको अङ्क = राशि (१ मेष … १२ मीन) · उत्तर भारतीय शैली (घर स्थिर, राशि घुम्छ)</p>`)}
      ${box('📖 कुण्डलीका शब्दहरूको अर्थ',`<ul class="kl-ul"><li><b>लग्न:</b> जन्मको बेला पूर्वी क्षितिजमा उदाइरहेको राशि। यो तपाईंको शरीर, व्यक्तित्व र जीवनको मूल आधार हो।</li><li><b>राशि:</b> आकाशका १२ भाग (मेष देखि मीन)। हरेक ग्रह कुनै न कुनै राशिमा हुन्छ।</li><li><b>चन्द्र राशि:</b> जन्मको बेला चन्द्रमा रहेको राशि। नेपालमा नाम राशि र राशिफल यसैबाट हेरिन्छ।</li><li><b>नक्षत्र / पाद:</b> आकाशका २७ तारा-समूह। हरेकका ४ पाद हुन्छन्। चन्द्रमा रहेको नक्षत्रबाट दशा सुरु हुन्छ।</li><li><b>भाव:</b> कुण्डलीका १२ घर, जसले जीवनका १२ क्षेत्र (शरीर, धन, साहस, घर, सन्तान, रोग, विवाह, आयु, भाग्य, कर्म, लाभ, खर्च) देखाउँछन्।</li><li><b>ग्रह:</b> सूर्य, चन्द्र, मंगल, बुध, गुरु, शुक्र, शनि र छायाग्रह राहु-केतु।</li><li><b>दशा:</b> ग्रहको समय-चक्र। जुन ग्रहको दशा चल्छ, त्यसको फल जीवनमा बढी देखिन्छ।</li><li><b>नवांश (D9):</b> हरेक राशिलाई ९ भाग गरिएको चार्ट, मुख्यतया विवाह र ग्रहको भित्री बल हेर्न प्रयोग हुन्छ।</li></ul>`)}
@@ -1558,7 +1560,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
       if(isNaN(lat)||isNaN(lon)||isNaN(tz)||Math.abs(lat)>66||Math.abs(lon)>180){out.innerHTML='<div class="kl-box">कृपया सही अक्षांश, देशान्तर र समय क्षेत्र हाल्नुहोस् (उदाहरण: 27.7172, 85.3240, 5.75)।</div>';return}}
     else{lat=PLC[pi][1];lon=PLC[pi][2];tz=Y<1986?5.5:5.75}
     const r=calc(Y,Mo,Da,Hh,Mi,tz,lat,lon);
-    LAST=build(r,{name:$k('kl-nm').value.trim(),d:dv,t:tv,place:pn,tz});
+    const JP=window.JP||{};LAST=build(r,{name:$k('kl-nm').value.trim(),d:dv,t:tv,place:pn,tz,en:JP.enD?JP.enD(Y,Mo,Da):dv,bs:JP.bsTxt?JP.bsTxt(JP.ad2bs(Y,Mo,Da)):''});
     out.innerHTML=`<div class="kl-bar"><button type="button" id="kl-pr">🖨️ PDF डाउनलोड / प्रिन्ट</button><span>खुल्ने विन्डोमा "Save as PDF" (PDF को रूपमा सेभ) छान्नुहोस्</span></div>`+LAST;
     $k('kl-pr').onclick=printPdf;
     out.scrollIntoView({behavior:'smooth',block:'start'});
@@ -1590,18 +1592,10 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
     const t=`नमस्ते Paban जी, म ${$g('bk-n').value.trim()}।\nमलाई "${$g('bk-s').value}" सम्बन्धी सेवा चाहिएको छ।`+($g('bk-d').value?`\nमिति: ${$g('bk-d').value}`:'')+($g('bk-p').value.trim()?`\nफोन: ${$g('bk-p').value.trim()}`:'')+($g('bk-m').value.trim()?`\n${$g('bk-m').value.trim()}`:'');
     window.open('https://wa.me/'+WANUM+'?text='+encodeURIComponent(t),'_blank','noopener');
   });
-  $g('cv-btn').addEventListener('click',()=>{
-    const sk=[...document.querySelectorAll('#skills .sk')].map(s=>`<div class="cs"><h4>${s.querySelector('h3').textContent}</h4><ul>${[...s.querySelectorAll('li')].map(l=>`<li>${l.textContent}</li>`).join('')}</ul></div>`).join('');
-    const ex=orgs.map(o=>`<div class="ex"><div class="eh"><b>${o.role}</b><span>${o.date}</span></div><div class="eo">${o.org} — ${o.loc}</div><p>${o.desc}</p></div>`).join('');
-    const css=`body{font-family:'Noto Sans Devanagari','Mangal',Arial,sans-serif;color:#111;margin:0;line-height:1.55;font-size:13px}h1{margin:0;font-size:28px;color:#6d28d9}.rl{font-size:14px;color:#555;margin:2px 0 6px}.ct{font-size:12px;color:#333;border-bottom:2px solid #6d28d9;padding-bottom:8px;margin-bottom:12px}h3{color:#6d28d9;border-bottom:1px solid #ddd;padding-bottom:3px;margin:16px 0 8px;font-size:15px}.ex{margin-bottom:10px;page-break-inside:avoid}.eh{display:flex;justify-content:space-between;gap:8px}.eo{color:#be185d;font-weight:600}.ex p{margin:3px 0 0;color:#333}.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cs{page-break-inside:avoid}.cs h4{margin:0 0 3px;font-size:13px}ul{margin:0;padding-left:16px}@page{size:A4;margin:14mm}`;
-    const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);
-    const d=f.contentWindow.document;d.open();d.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paban Subedi — Resume</title><style>${css}</style></head><body><h1>Paban Subedi</h1><div class="rl">Digital Marketer • IT Professional • Computer Instructor</div><div class="ct">📧 pabansubedi128@gmail.com &nbsp;|&nbsp; 📞 +977 9825928760 &nbsp;|&nbsp; 📍 Jhapa, Nepal</div><h3>Experience (७+ वर्ष)</h3>${ex}<h3>Skills</h3><div class="sg">${sk}</div></body></html>`);d.close();
-    setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),60000)},500);
-  });
 })();
 
 </script>
-<script src="jyotish-plus.js?v=8"></script>
+<script src="jyotish-plus.js?v=9"></script>
 
 <!-- राइट क्लिक र भ्यू सोर्स रोक्ने सुरक्षा कोड यहाँ राख्नुहोस् -->
 <script>
