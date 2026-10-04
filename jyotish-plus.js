@@ -163,3 +163,115 @@ if(tg){tg.insertAdjacentHTML('afterbegin','<div class="tz-c"><h3>📅 AD ↔ BS 
  /* UULF + channel id = uploads playlist WITHOUT Shorts (latest long videos first) */
  vd.innerHTML='<div style="grid-column:1/-1;aspect-ratio:16/9;max-width:860px;width:100%;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid var(--bd)"><iframe style="width:100%;height:100%;border:0" src="https://www.youtube.com/embed/videoseries?list=UULF'+CH.slice(2)+'" title="Paban Subedi - latest videos" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><a class="btn bp ytm" href="https://www.youtube.com/@pabansubedi/videos" target="_blank" rel="noopener">All Videos on YouTube ▶</a>';
 })();
+
+/* =====================================================================
+   PLUS 2: CV, Language toggle, Blog, Tools sub-tabs (Preeti, Translate, QR, Image, SIP/FD)
+   ===================================================================== */
+(function(){
+const $=id=>document.getElementById(id),Q=s=>document.querySelector(s),QA=s=>[...document.querySelectorAll(s)];
+const ND=s=>String(s).replace(/\d/g,d=>'०१२३४५६७८९'[d]),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+/* ---- EDIT HERE: CV ma dekhine kura ---- */
+const CFG={edu:[/* ['SLC / SEE','School ko naam','2070'], ['+2','Campus','2072'] */],lang:['Nepali (Native)','English (Professional)'],place:'Jhapa, Nepal'};
+
+/* ---------- CV (print / PDF) ---------- */
+function printCV(){
+ const O=typeof orgs!=='undefined'?orgs:[];
+ const sk=QA('#skills .sk').map(s=>`<div class="cs"><h4>${esc(s.querySelector('h3').textContent)}</h4><ul>${[...s.querySelectorAll('li')].map(l=>`<li>${esc(l.textContent)}</li>`).join('')}</ul></div>`).join('');
+ const ex=O.map(o=>`<div class="ex"><div class="eh"><b>${esc(o.role)}</b><span>${esc(o.date)}</span></div><div class="eo">${esc(o.org)} — ${esc(o.loc)}</div><p>${esc(o.desc)}</p></div>`).join('');
+ const ed=CFG.edu.length?`<h3>Education</h3>${CFG.edu.map(e=>`<div class="eh"><b>${esc(e[0])}</b><span>${esc(e[2]||'')}</span></div><div class="eo2">${esc(e[1]||'')}</div>`).join('')}`:'';
+ const css=`body{font-family:'Noto Sans Devanagari','Mangal',Arial,sans-serif;color:#111;margin:0;line-height:1.5;font-size:12.5px}h1{margin:0;font-size:28px;color:#6d28d9}.rl{font-size:14px;color:#555;margin:2px 0 6px}.ct{font-size:12px;color:#333;border-bottom:2px solid #6d28d9;padding-bottom:8px;margin-bottom:10px}h3{color:#6d28d9;border-bottom:1px solid #ddd;padding-bottom:3px;margin:14px 0 7px;font-size:15px;text-transform:uppercase;letter-spacing:1px}.ex{margin-bottom:9px;page-break-inside:avoid}.eh{display:flex;justify-content:space-between;gap:8px}.eo{color:#be185d;font-weight:600}.eo2{color:#444;margin-bottom:5px}.ex p{margin:2px 0 0;color:#333}.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cs{page-break-inside:avoid}.cs h4{margin:0 0 2px;font-size:13px}ul{margin:0;padding-left:16px}.sign{margin-top:26px;page-break-inside:avoid}.sr{display:flex;justify-content:space-between;margin-top:34px}.sl{border-top:1px solid #111;width:200px;text-align:center;padding-top:4px}@page{size:A4;margin:13mm}`;
+ const html=`<h1>Paban Subedi</h1><div class="rl">Digital Marketer • IT Professional • Computer Instructor</div><div class="ct">📧 pabansubedi128@gmail.com &nbsp;|&nbsp; 📞 +977 9825928760 &nbsp;|&nbsp; 📍 Jhapa, Nepal &nbsp;|&nbsp; 🌐 pabansubedi.com.np</div>
+ <h3>Profile</h3><p>Digital marketing, e-commerce, IT support ra ICT shikshya ma ७+ barsa ko anubhav bhayeko professional. Online product listing, social media promotion, system/network administration ra computer teaching ma kaam gareko.</p>
+ <h3>Experience</h3>${ex}<h3>Skills</h3><div class="sg">${sk}</div>${ed}
+ <h3>Languages</h3><p>${CFG.lang.map(esc).join(' &nbsp;•&nbsp; ')}</p>
+ <div class="sign"><h3>Declaration</h3><p>म यसद्वारा घोषणा गर्दछु कि माथि उल्लिखित सबै विवरण मेरो जानकारी र विश्वास अनुसार सत्य छन्।</p>
+ <div class="sr"><div>मिति: ____________________<br>स्थान: ${esc(CFG.place)}</div><div class="sl">हस्ताक्षर<br><b>Paban Subedi</b></div></div></div>`;
+ const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);
+ const d=f.contentWindow.document;d.open();d.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Paban Subedi — CV</title><style>${css}</style></head><body>${html}</body></html>`);d.close();
+ setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),60000)},500)}
+const cv=$('cv-btn');if(cv)cv.addEventListener('click',e=>{e.stopImmediatePropagation();printCV()},true);
+
+/* ---------- Blog / Tips ---------- */
+const nav=Q('.links a[href="#services"]'),sv=$('services');
+if(sv){
+ const T=[['📱','सामाजिक सञ्जालमा नियमित रहनुहोस्','हप्तामा ३ वटा राम्रा पोस्ट, दिनमा १० वटा भन्दा बढी असरदार हुन्छ।','१) आफ्नो ग्राहक कुन प्लेटफर्ममा छन् त्यो छान्नुहोस्। २) हप्ताको कन्टेन्ट क्यालेन्डर बनाउनुहोस्। ३) कमेन्ट र इनबक्समा १ घण्टाभित्र जवाफ दिनुहोस्। ४) कुन पोस्टले राम्रो गर्यो हेरेर दोहोर्याउनुहोस्।'],
+ ['📍','Google Business Profile बनाउनुहोस्','"नजिकको कम्प्युटर रिपेयर" खोज्दा तपाईंको पसल Maps मा देखिन्छ, त्यो पनि निःशुल्क।','नाम, ठेगाना, फोन, खुल्ने समय र फोटो सही राख्नुहोस्। ग्राहकलाई रिभ्यू दिन अनुरोध गर्नुहोस् र सबै रिभ्यूको जवाफ दिनुहोस्।'],
+ ['💬','WhatsApp Business को प्रयोग','क्याटलग र क्विक रिप्लाइले ग्राहकसँग कुरा गर्न धेरै सजिलो बनाउँछ।','प्रोफाइल पूरा गर्नुहोस्, उत्पादन क्याटलगमा राख्नुहोस्, "नमस्ते" स्वागत सन्देश सेट गर्नुहोस्। अनुमति बिना बल्क सन्देश नपठाउनुहोस्।'],
+ ['🎬','छोटो भिडियो (Reels / Shorts)','सुरुका ३ सेकेन्डमा ध्यान तान्न सके मात्र मानिसले भिडियो अन्त्यसम्म हेर्छन्।','एउटा भिडियोमा एउटै कुरा राख्नुहोस्। समस्या → समाधान → "सम्पर्क गर्नुहोस्" ढाँचा प्रयोग गर्नुहोस्। सबटाइटल राख्नुहोस्, राम्रो उज्यालो र सफा आवाज भए मोबाइल नै पुग्छ।'],
+ ['🔍','SEO को सुरुआत','Google मा नाम आउनु निःशुल्क ग्राहक पाउने सबैभन्दा ठूलो बाटो हो।','ग्राहकले के खोज्छन् त्यो कीवर्ड सोच्नुहोस् र पेजको शीर्षक र विवरणमा राख्नुहोस्। सजिलो भाषा, छिटो लोड हुने र मोबाइलमा राम्रो देखिने पेज बनाउनुहोस्।'],
+ ['📊','नतिजा नाप्नुहोस्','नाप्न नसकिने कुरा सुधार्न सकिँदैन। Google Analytics ले कहाँबाट मानिस आए देखाउँछ।','प्रत्येक अभियानको लिङ्कमा UTM राख्नुहोस्। हप्तामा एकपटक १५ मिनेट रिपोर्ट हेर्नुहोस् र जुन माध्यमले काम गर्यो त्यहीँ बढी समय दिनुहोस्।']];
+ sv.insertAdjacentHTML('beforebegin',`<section id="blog"><div class="ct"><div class="sh"><div class="st">Tips</div><h2>Digital Marketing <span class="grad">Tips</span></h2></div><div class="sv">${T.map(t=>`<div class="svc"><div class="si">${t[0]}</div><h3>${t[1]}</h3><p>${t[2]}</p><details><summary style="cursor:pointer;color:var(--a);font-weight:600">पूरा पढ्नुहोस्</summary><p style="margin-top:.6rem">${t[3]}</p></details></div>`).join('')}</div></div></section>`);
+ if(nav)nav.parentNode.insertAdjacentHTML('beforebegin','<li><a href="#blog">Blog</a></li>');
+ const fl=Q('.fl a[href="#services"]');if(fl)fl.insertAdjacentHTML('beforebegin','<a href="#blog">Blog</a>');
+ QA('a[href="#blog"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();scrollTo({top:$('blog').offsetTop-100,behavior:'smooth'})}))}
+
+/* ---------- Language toggle (EN / नेपाली) ---------- */
+const NV={'#home':['Home','गृहपृष्ठ'],'#experience':['Experience','अनुभव'],'#skills':['Skills','सिप'],'#courses':['Courses','कोर्स'],'#jyotish':['Jyotish','ज्योतिष'],'#blog':['Blog','ब्लग'],'#services':['Services','सेवा'],'#videos':['Videos','भिडियो'],'#tools':['Tools','टूल्स'],'#contact':['Contact','सम्पर्क']};
+const HD={experience:['Organizations <span class="grad">I\'ve Served</span>','मैले सेवा गरेका <span class="grad">संस्था</span>'],skills:['My <span class="grad">Skills</span>','मेरा <span class="grad">सिप</span>'],courses:['Digital Marketing <span class="grad">Courses</span>','डिजिटल मार्केटिङ <span class="grad">कोर्स</span>'],blog:['Digital Marketing <span class="grad">Tips</span>','डिजिटल मार्केटिङ <span class="grad">सुझाव</span>'],services:['My <span class="grad">Services</span>','मेरा <span class="grad">सेवा</span>'],videos:['Watch My <span class="grad">Videos</span>','मेरा <span class="grad">भिडियो</span>'],tools:['Useful <span class="grad">Tools & FAQ</span>','उपयोगी <span class="grad">टूल्स र FAQ</span>'],contact:['Let\'s <span class="grad">Connect</span>','आऊँ <span class="grad">जोडिऔँ</span>']};
+const MS=[['.badge','Available for opportunities','नयाँ अवसरका लागि उपलब्ध'],['.btns a[href="#contact"]','Get In Touch →','सम्पर्क गर्नुहोस् →'],['.btns a[href="#experience"]','View My Work','मेरो काम हेर्नुहोस्'],['.lead','Digital Marketer, IT Professional and Computer Instructor from Jhapa, Nepal, with 7+ years of experience in e-commerce, IT support and ICT education.','झापा, नेपालबाट डिजिटल मार्केटर, आइटी प्रोफेशनल र कम्प्युटर इन्स्ट्रक्टर। ई-कमर्स, आइटी सपोर्ट र ICT शिक्षामा ७+ वर्षको अनुभव।']];
+let LG='en';try{LG=localStorage.getItem('lang')||'en'}catch(e){}
+const lt=document.createElement('li');lt.innerHTML='<button class="tt" id="lg-b" aria-label="Language" style="font-size:.78rem;font-weight:700;width:auto;padding:0 .8rem;border-radius:100px">नेपाली</button>';
+const tth=$('tt');if(tth&&tth.parentNode)tth.parentNode.parentNode.insertBefore(lt,tth.parentNode);
+function setLang(l){LG=l;const i=l==='ne'?1:0;
+ QA('.links a[href^="#"],.fl a[href^="#"]').forEach(a=>{const v=NV[a.getAttribute('href')];if(v)a.textContent=v[i]});
+ Object.keys(HD).forEach(k=>{const h=Q('#'+k+' h2');if(h)h.innerHTML=HD[k][i]});
+ MS.forEach(m=>{const e=Q(m[0]);if(!e)return;if(m[0]==='.badge'){const d=e.querySelector('.dot');e.textContent=m[i+1];if(d)e.prepend(d)}else e.textContent=m[i+1]});
+ const b=$('lg-b');if(b)b.textContent=l==='ne'?'English':'नेपाली';
+ document.documentElement.lang=l==='ne'?'ne':'en';try{localStorage.setItem('lang',l)}catch(e){}}
+$('lg-b')&&($('lg-b').onclick=()=>setLang(LG==='ne'?'en':'ne'));
+setTimeout(()=>{if(LG==='ne')setLang('ne')},2000);
+
+/* ---------- Tools: sub-tabs + new tools ---------- */
+const tg=Q('.tz-g');if(!tg)return;
+const card=(g,h,b)=>`<div class="tz-c" data-g="${g}"><h3>${h}</h3>${b}</div>`;
+const btn='class="btn bp" style="margin-top:.8rem;padding:.7rem 1.4rem"';
+tg.insertAdjacentHTML('beforeend',
+ card('np','🔤 Preeti ↔ Unicode','<label>टेक्स्ट</label><textarea id="pu-i" rows="4" placeholder="Preeti (g]kfn) वा Unicode (नेपाल) यहाँ राख्नुहोस्"></textarea><div style="display:flex;gap:.5rem;flex-wrap:wrap"><button type="button" id="pu-a" '+btn+'>Preeti → Unicode</button><button type="button" id="pu-b" '+btn+'>Unicode → Preeti</button></div><div class="tz-r" id="pu-o">नतिजा यहाँ देखिन्छ।</div><p style="font-size:.75rem;color:var(--dim);margin-top:.5rem">नोट: Unicode → Preeti अनुमानित हुन्छ, लामो कागजातमा जाँच गर्नुहोस्।</p>')+
+ card('np','🌐 English → नेपाली','<label>English text</label><textarea id="tr-i" rows="4" placeholder="Hello, how are you?"></textarea><button type="button" id="tr-b" '+btn+'>अनुवाद गर्नुहोस्</button><div class="tz-r" id="tr-o">अनुवाद यहाँ देखिन्छ।</div><p style="font-size:.75rem;color:var(--dim);margin-top:.5rem">MyMemory निःशुल्क सेवा प्रयोग हुन्छ, इन्टरनेट चाहिन्छ। महत्त्वपूर्ण कागजातमा आफैँ जाँच गर्नुहोस्।</p>')+
+ card('qr','📱 QR Code जेनेरेटर','<label>प्रकार</label><select id="qr-t"><option value="t">Text / Link / WhatsApp</option><option value="f">Image / PDF (link बाट)</option></select><label id="qr-l">टेक्स्ट वा लिङ्क</label><textarea id="qr-i" rows="3" placeholder="https://pabansubedi.com.np"></textarea><p id="qr-n" style="display:none;font-size:.78rem;color:var(--dim);margin-top:.4rem">Image वा PDF को QR बनाउन पहिले त्यसलाई Google Drive / वेबसाइटमा अपलोड गरेर Share link यहाँ राख्नुहोस्। फाइल आफैँ QR भित्र अटाउँदैन।</p><button type="button" id="qr-b" '+btn+'>QR बनाउनुहोस्</button><div id="qr-o" style="margin:1rem auto 0;display:flex;justify-content:center;background:#fff;padding:12px;border-radius:12px;width:fit-content"></div><a id="qr-d" class="btn bo" style="display:none;margin-top:.8rem;padding:.6rem 1.2rem" download="qr.png">⬇ PNG डाउनलोड</a>')+
+ card('im','🖼 Image Compressor','<label>फोटो छान्नुहोस्</label><input type="file" id="ic-f" accept="image/*"><label>गुणस्तर: <b id="ic-q">70</b>%</label><input type="range" id="ic-r" min="20" max="95" value="70"><label>अधिकतम चौडाइ</label><select id="ic-w"><option value="0">मूल साइज</option><option value="1920">1920 px</option><option value="1280" selected>1280 px</option><option value="800">800 px</option></select><button type="button" id="ic-b" '+btn+'>कम्प्रेस गर्नुहोस्</button><div class="tz-r" id="ic-o">फोटो छानेपछि नतिजा यहाँ देखिन्छ।</div><a id="ic-d" class="btn bo" style="display:none;margin-top:.8rem;padding:.6rem 1.2rem">⬇ डाउनलोड</a>')+
+ card('fin','📈 SIP क्याल्कुलेटर','<label>मासिक लगानी (रु)</label><input type="number" id="sp-p" placeholder="5000" min="0"><label>अनुमानित वार्षिक प्रतिफल (%)</label><input type="number" id="sp-r" placeholder="12" min="0" step="0.1"><label>अवधि (वर्ष)</label><input type="number" id="sp-y" placeholder="10" min="0" step="0.5"><div class="tz-r" id="sp-o">विवरण भरेपछि नतिजा देखिन्छ।</div>')+
+ card('fin','🏦 Fixed Deposit क्याल्कुलेटर','<label>जम्मा रकम (रु)</label><input type="number" id="fd-p" placeholder="100000" min="0"><label>वार्षिक ब्याज दर (%)</label><input type="number" id="fd-r" placeholder="9" min="0" step="0.1"><label>अवधि (वर्ष)</label><input type="number" id="fd-y" placeholder="3" min="0" step="0.5"><label>ब्याज थप्ने अवधि</label><select id="fd-n"><option value="4">त्रैमासिक</option><option value="12">मासिक</option><option value="1">वार्षिक</option></select><div class="tz-r" id="fd-o">विवरण भरेपछि नतिजा देखिन्छ।</div>'));
+QA('.tz-g > .tz-c').forEach(c=>{if(c.dataset.g)return;c.dataset.g=c.querySelector('details')?'faq':'cal'});
+tg.insertAdjacentHTML('beforebegin','<div class="crs-f" id="tz-f"><button class="on" data-t="cal">🧮 क्याल्कुलेटर</button><button data-t="fin">💰 SIP / FD</button><button data-t="np">🔤 नेपाली टूल्स</button><button data-t="qr">📱 QR</button><button data-t="im">🖼 Image</button><button data-t="faq">❓ FAQ</button></div>');
+function tab(t){QA('#tz-f button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));QA('.tz-g > .tz-c').forEach(c=>c.style.display=c.dataset.g===t?'':'none')}
+$('tz-f').addEventListener('click',e=>{const b=e.target.closest('button');if(b)tab(b.dataset.t)});tab('cal');
+
+/* Preeti */
+const PM={a:'ब',b:'द',c:'अ',d:'म',e:'भ',f:'ा',g:'न',h:'ज',i:'ष्',j:'व',k:'प',l:'ि',m:'फ',n:'ल',o:'य',p:'उ',q:'त्र',r:'च',s:'क',t:'त',u:'ग',v:'ख',w:'ध',x:'ह',y:'थ',z:'श',A:'ब्',B:'द्',C:'ऋ',D:'म्',E:'भ्',F:'ँ',G:'न्',H:'ज्',I:'क्ष्',J:'व्',K:'प्',L:'ी',M:'फ्',N:'ल्',O:'इ',P:'ए',Q:'त्त',R:'च्',S:'क्',T:'त्',U:'ग्',V:'ख्',W:'ध्',X:'ह्',Y:'थ्',Z:'श्','0':'ण्','1':'ज्ञ','2':'द्द','3':'घ','4':'द्ध','5':'छ','6':'ट','7':'ठ','8':'ड','9':'ढ','`':'ञ','~':'ञ्','!':'१','@':'२','#':'३','$':'४','%':'५','^':'६','&':'७','*':'८','(':'९',')':'०','-':'(','_':')','=':'.','+':'ं','[':'ृ','{':'र्',']':'े','}':'ै','\\':'्',';':'स',':':'स्',"'":'ु','"':'ू','<':'?','>':'श्र','/':'र','?':'रु','|':'्र','.':'।'};
+function p2u(s){let o=[...s].map(c=>PM[c]!==undefined?PM[c]:c).join('');
+ o=o.replace(/ाे/g,'ो').replace(/ाै/g,'ौ').replace(/(ि)((?:[क-ह]्)*[क-ह])/g,'$2$1').replace(/((?:[क-ह]्)*[क-ह][ािीुूृेैोौं]*)(र्)/g,'$2$1');return o}
+const INV=Object.entries(PM).map(([k,v])=>[v,k]).sort((a,b)=>b[0].length-a[0].length),IM=new Map(INV.map(x=>[x[0],x[1]]));
+const IR=new RegExp(INV.map(x=>x[0].replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+function u2p(s){s=s.replace(/ो/g,'ाे').replace(/ौ/g,'ाै').replace(/((?:[क-ह]्)*[क-ह])ि/g,'ि$1');return s.replace(IR,m=>IM.get(m))}
+$('pu-a').onclick=()=>{$('pu-o').textContent=p2u($('pu-i').value)||'—'};
+$('pu-b').onclick=()=>{$('pu-o').textContent=u2p($('pu-i').value)||'—'};
+
+/* Translate */
+$('tr-b').onclick=async()=>{const t=$('tr-i').value.trim(),o=$('tr-o');if(!t)return;o.textContent='अनुवाद गर्दै...';
+ try{const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(t)+'&langpair=en|ne'),j=await r.json();o.textContent=(j.responseData&&j.responseData.translatedText)||'अनुवाद भेटिएन।'}
+ catch(e){o.textContent='इन्टरनेट वा सेवामा समस्या भयो, फेरि प्रयास गर्नुहोस्।'}};
+
+/* QR */
+let qrL=null;function lq(cb){if(window.QRCode)return cb();if(qrL)return qrL.push(cb);qrL=[cb];const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=()=>qrL.forEach(f=>f());document.head.appendChild(s)}
+$('qr-t').onchange=e=>{const f=e.target.value==='f';$('qr-n').style.display=f?'block':'none';$('qr-l').textContent=f?'फाइलको Share link':'टेक्स्ट वा लिङ्क'};
+$('qr-b').onclick=()=>{const v=$('qr-i').value.trim();if(!v)return;lq(()=>{const o=$('qr-o');o.innerHTML='';new QRCode(o,{text:v,width:240,height:240,correctLevel:QRCode.CorrectLevel.M});
+ setTimeout(()=>{const c=o.querySelector('canvas'),d=$('qr-d');if(c){d.href=c.toDataURL('image/png');d.style.display='inline-block'}},300)})};
+
+/* Image compressor */
+$('ic-r').oninput=e=>$('ic-q').textContent=e.target.value;
+$('ic-b').onclick=()=>{const f=$('ic-f').files[0],o=$('ic-o');if(!f){o.textContent='पहिले फोटो छान्नुहोस्।';return}
+ const img=new Image();img.onload=()=>{let w=img.width,h=img.height,mw=+$('ic-w').value;if(mw&&w>mw){h=Math.round(h*mw/w);w=mw}
+  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);
+  c.toBlob(b=>{const kb=n=>(n/1024).toFixed(1)+' KB',d=$('ic-d');d.href=URL.createObjectURL(b);d.download=f.name.replace(/\.[^.]+$/,'')+'-compressed.jpg';d.style.display='inline-block';
+   o.innerHTML='मूल: <b>'+kb(f.size)+'</b><br>नयाँ: <b>'+kb(b.size)+'</b> ('+w+'×'+h+')<br>बचत: <b>'+Math.max(0,Math.round((1-b.size/f.size)*100))+'%</b>'},'image/jpeg',$('ic-r').value/100)};
+ img.src=URL.createObjectURL(f)};
+
+/* SIP / FD */
+const fm=x=>ND(Math.round(x).toLocaleString('en-IN'));
+function sip(){const P=+$('sp-p').value,r=+$('sp-r').value/1200,n=Math.round(+$('sp-y').value*12),o=$('sp-o');if(!P||!n||$('sp-r').value===''){o.textContent='विवरण भरेपछि नतिजा देखिन्छ।';return}
+ const F=r?P*((Math.pow(1+r,n)-1)/r)*(1+r):P*n,I=P*n;o.innerHTML='कुल लगानी: <b>रु '+fm(I)+'</b><br>अनुमानित नाफा: <b>रु '+fm(F-I)+'</b><br>अन्तिम रकम: <b>रु '+fm(F)+'</b>'}
+function fd(){const P=+$('fd-p').value,r=+$('fd-r').value/100,t=+$('fd-y').value,n=+$('fd-n').value,o=$('fd-o');if(!P||!t||$('fd-r').value===''){o.textContent='विवरण भरेपछि नतिजा देखिन्छ।';return}
+ const A=P*Math.pow(1+r/n,n*t);o.innerHTML='जम्मा रकम: <b>रु '+fm(P)+'</b><br>कुल ब्याज: <b>रु '+fm(A-P)+'</b><br>परिपक्व रकम: <b>रु '+fm(A)+'</b>'}
+['sp-p','sp-r','sp-y'].forEach(i=>$(i).addEventListener('input',sip));['fd-p','fd-r','fd-y','fd-n'].forEach(i=>$(i).addEventListener('input',fd));
+})();
