@@ -278,3 +278,22 @@ function fd(){const P=+$('fd-p').value,r=+$('fd-r').value/100,t=+$('fd-y').value
  const A=P*Math.pow(1+r/n,n*t);o.innerHTML='जम्मा रकम: <b>रु '+fm(P)+'</b><br>कुल ब्याज: <b>रु '+fm(A-P)+'</b><br>परिपक्व रकम: <b>रु '+fm(A)+'</b>'}
 ['sp-p','sp-r','sp-y'].forEach(i=>$(i).addEventListener('input',sip));['fd-p','fd-r','fd-y','fd-n'].forEach(i=>$(i).addEventListener('input',fd));
 })();
+
+/* ---- Nav cleanup: kam use hune link "More" dropdown ma ---- */
+(function(){
+ const ul=document.getElementById('links');if(!ul)return;
+ const st=document.createElement('style');st.textContent=`.mr{position:relative}.mr>button{background:none;border:0;color:var(--dim);font:500 .88rem 'Space Grotesk',sans-serif;padding:.5rem .9rem;border-radius:100px;transition:.3s}.mr>button:hover,.mr.open>button{color:var(--text);background:var(--card)}
+.mr-m{display:none;position:absolute;top:calc(100% + 10px);right:0;min-width:170px;background:var(--bg2);border:1px solid var(--bd);border-radius:18px;padding:.5rem;list-style:none;box-shadow:0 20px 50px rgba(0,0,0,.45);z-index:5}.mr.open .mr-m{display:block}.mr-m a{display:block;white-space:nowrap}
+#lg-b{padding:0 .7rem!important;height:38px}
+@media(max-width:968px){.mr>button{display:none}.mr-m{display:block;position:static;background:none;border:0;box-shadow:none;padding:0;min-width:0}}`;document.head.appendChild(st);
+ const mv=['#jyotish','#blog','#videos','#tools'].map(h=>{const a=ul.querySelector('a[href="'+h+'"]');return a&&a.parentNode}).filter(Boolean);
+ if(!mv.length)return;
+ const li=document.createElement('li');li.className='mr';li.innerHTML='<button type="button" aria-haspopup="true" aria-expanded="false">More ▾</button><ul class="mr-m"></ul>';
+ mv[0].parentNode.insertBefore(li,mv[0]);
+ const sub=li.querySelector('.mr-m');mv.forEach(x=>sub.appendChild(x));
+ const bt=li.querySelector('button'),set=o=>{li.classList.toggle('open',o);bt.setAttribute('aria-expanded',o)};
+ bt.addEventListener('click',e=>{e.stopPropagation();set(!li.classList.contains('open'))});
+ document.addEventListener('click',e=>{if(!e.target.closest('.mr'))set(false)});
+ sub.addEventListener('click',()=>set(false));
+ addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});
+})();
