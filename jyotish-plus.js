@@ -554,7 +554,7 @@ if(jf){const G=[
   gs.innerHTML=G[gi][1].map((i,j)=>{const a=i[1],on=a[2]?fu:(a[0]===t&&(a[1]||a[0])===s&&!(fu&&t==='kl'));return`<button type="button" data-g="${gi}" data-j="${j}" class="${on?'on':''}">${i[0]}</button>`}).join('')};
  const act=a=>{fu=0;hn.textContent='';const b=jf.querySelector('[data-jt="'+a[0]+'"]');if(b)b.click();
   if(a[1]){const x=$('jsb-'+a[0])&&$('jsb-'+a[0]).querySelector('[data-s="'+a[1]+'"]');if(x)x.click()}
-  if(a[2]){fu=1;const f=$('fu-box');if(f)f.scrollIntoView({behavior:'smooth',block:'start'});else hn.textContent='पहिले जन्म विवरण भरेर कुण्डली बनाउनुहोस् — भविष्यफल कुण्डलीको तल देखिन्छ।'}
+  if(a[2]){fu=1;const f=$('fu-box');if(f){window.JKT?JKT(4):f.scrollIntoView({behavior:'smooth',block:'start'})}else hn.textContent='पहिले जन्म विवरण भरेर कुण्डली बनाउनुहोस् — भविष्यफल कुण्डलीको तल देखिन्छ।'}
   render()};
  gf.onclick=e=>{const b=e.target.closest('button');if(b)act(G[+b.dataset.g][1][0][1])};
  gs.onclick=e=>{const b=e.target.closest('button');if(b)act(G[+b.dataset.g][1][+b.dataset.j][1])};
@@ -625,6 +625,44 @@ if(ko&&$('kl-f')&&JC)new MutationObserver(()=>{if(!ko.querySelector('.kl-sum')||
   if(pi>=NPD.length){lat=parseFloat($('kl-la').value);lon=parseFloat($('kl-lo').value);tz=parseFloat($('kl-tz').value)}else{lat=NPD[pi][1];lon=NPD[pi][2];tz=Y<1986?5.5:5.75}
   const[h,wr]=build(JC(Y,Mo,Da,Hh,Mi,tz,lat,lon));ko.insertAdjacentHTML('beforeend',h);
   const sl=$('fu-h');if(sl)sl.onchange=()=>{$('fu-w').innerHTML=wr(+sl.value)};
-  const bar=ko.querySelector('.kl-bar');if(bar&&!$('fu-j')){bar.insertAdjacentHTML('beforeend','<button type="button" id="fu-j">🔭 भविष्यफल</button>');$('fu-j').onclick=()=>$('fu-box').scrollIntoView({behavior:'smooth',block:'start'})}
+  const bar=ko.querySelector('.kl-bar');if(bar&&!$('fu-j')){bar.insertAdjacentHTML('beforeend','<button type="button" id="fu-j">🔭 भविष्यफल</button>');$('fu-j').onclick=()=>window.JKT?JKT(4):$('fu-box').scrollIntoView({behavior:'smooth',block:'start'})}
  }catch(e){ko.insertAdjacentHTML('beforeend','<div class="kl-box" id="fu-box">भविष्यफल गणना गर्न सकिएन।</div>')}}).observe(ko,{childList:true});
+})();
+
+/* =====================================================================
+   PLUS 6: कुण्डली नतिजा ६ ट्याबमा (सारांश · ग्रह · योग-दोष · दशा · भविष्यफल · उपाय/अर्थ)
+   ===================================================================== */
+(function(){
+const $=id=>document.getElementById(id),ko=$('kl-out');if(!ko)return;
+const st=document.createElement('style');
+st.textContent='.kt-n{display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:.5rem;margin:0 0 1.3rem;scroll-margin-top:100px}.kt-n::-webkit-scrollbar{display:none}.kt-n button{flex:0 0 auto;white-space:nowrap}.kt-n>button:first-child{margin-left:auto}.kt-n>button:last-child{margin-right:auto}.kt-p{display:none}.kt-p.on{display:block}@media(max-width:480px){.kt-n button{padding:.55rem .85rem;font-size:.78rem}}';
+document.head.appendChild(st);
+const T=[['🏠 सारांश',['🔮','✨']],['🪐 ग्रह',['🪐','🧭']],['⚖️ योग / दोष',['⚖']],['⏳ दशा',['⏳','🕒']],['🔭 भविष्यफल',[]],['💎 उपाय / अर्थ',['💎','📖']]];
+function go(i,sc){const n=ko.querySelector(':scope > .kt-n');if(!n)return;
+ n.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===i));
+ ko.querySelectorAll(':scope > .kt-p').forEach((p,j)=>p.classList.toggle('on',j===i));
+ if(sc!==false)n.scrollIntoView({behavior:'smooth',block:'start'})}
+window.JKT=go;
+new MutationObserver(()=>{
+ if(!ko.querySelector('.kl-sum')||!$('fu-box')||ko.querySelector('.kt-n'))return;
+ const fu=$('fu-box'),sum=ko.querySelector(':scope > .kl-sum'),kids=[...ko.children];if(!sum)return;
+ const nav=document.createElement('div');nav.className='crs-f kt-n';nav.setAttribute('role','tablist');
+ nav.innerHTML=T.map((t,i)=>`<button type="button" role="tab" class="${i?'':'on'}" data-i="${i}">${t[0]}</button>`).join('');
+ const pan=T.map((t,i)=>{const d=document.createElement('div');d.className='kt-p'+(i?'':' on');return d}),bk=T.map(()=>[]);
+ ko.insertBefore(nav,sum);let ref=nav;pan.forEach(p=>{ref.after(p);ref=p});
+ kids.forEach(k=>{if(k===fu){bk[4].push([0,k]);return}
+  if(k===sum){bk[0].push([-1,k]);return}
+  if(k.classList.contains('kl-box')){const h=k.querySelector('h3'),t=h?h.textContent.trim():'';let ti=-1,pi=-1;
+   T.forEach((x,i)=>x[1].forEach((p,j)=>{if(ti<0&&t.startsWith(p)){ti=i;pi=j}}));
+   bk[ti<0?0:ti].push([pi<0?0:pi,k])}});
+ bk.forEach((a,i)=>a.sort((x,y)=>x[0]-y[0]).forEach(x=>pan[i].appendChild(x[1])));
+ /* भविष्यफल भित्र उप-खण्ड */
+ {const S=[['📍 अहिले',['🔭','🪐']],['📈 १० वर्ष',['📈']],['🎯 क्षेत्र अनुसार',['🎯']],['🗓 मिति / साढेसाती',['🗓','⚖']]],bx=[...fu.children].filter(c=>c.classList.contains('kl-box'));
+  if(bx.length>1){const sn=document.createElement('div');sn.className='crs-f kt-n kt-s';sn.style.margin='0 0 1.1rem';sn.innerHTML=S.map((t,i)=>`<button type="button" class="${i?'':'on'}" data-s="${i}">${t[0]}</button>`).join('');
+   const sp=S.map((t,i)=>{const d=document.createElement('div');d.className='kt-p kt-sp'+(i?'':' on');return d});
+   fu.insertBefore(sn,bx[0]);let r2=sn;sp.forEach(d=>{r2.after(d);r2=d});
+   bx.forEach(x=>{const h=x.querySelector('h3'),t=h?h.textContent.trim():'';let k=S.findIndex(q=>q[1].some(pf=>t.startsWith(pf)));sp[k<0?0:k].appendChild(x)});
+   sn.onclick=e=>{const b=e.target.closest('button');if(!b)return;sn.querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===b));sp.forEach((d,i)=>d.classList.toggle('on',i===+b.dataset.s));sn.scrollIntoView({behavior:'smooth',block:'nearest'})}}}
+ nav.onclick=e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i)};
+ const j=$('fu-j');if(j)j.onclick=()=>go(4)}).observe(ko,{childList:true});
 })();
