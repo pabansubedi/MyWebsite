@@ -525,3 +525,106 @@ window.JCARD=(mb,u)=>{const g=s=>{const x=mb.querySelector(s);return x?x.textCon
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;const f=document.querySelector('.ft');if(f&&!$('pwa-b')){f.insertAdjacentHTML('beforeend','<button type="button" id="pwa-b" class="btn bp" style="padding:.6rem 1.2rem">📲 फोनमा एप install</button>');$('pwa-b').onclick=()=>{dp.prompt();dp=null;$('pwa-b').remove()}}});
 })();
+
+/* =====================================================================
+   PLUS 5: मेनु व्यवस्थापन (थप ▾ + ट्याब समूह) र भविष्यफल (विंशोत्तरी दशा + गोचर)
+   ===================================================================== */
+(function(){
+const $=id=>document.getElementById(id),JC=window.JPC,JP=window.JP||{},NPD=window.NPD||[['काठमाडौँ',27.7172,85.324]];
+const jf=$('jt-f'),ko=$('kl-out'),ND=s=>String(s).replace(/\d/g,d=>'०१२३४५६७८९'[d]);
+const st=document.createElement('style');
+st.textContent='#jt-f,#jsb-kl,#jsb-pt{display:none!important}#jg-f{justify-content:center;margin-bottom:1rem}#jg-f button{font-size:.9rem;padding:.7rem 1.3rem}#jg-s{justify-content:center;margin:0 0 1.4rem}#fu-box{scroll-margin-top:100px}#fu-box .kl-t td,#fu-box .kl-t th{font-size:.84rem}#fu-box small{color:var(--dim)}';
+document.head.appendChild(st);
+
+/* ---------- मुख्य मेनु: ज्योतिष माथि (मुख्य), अनुभव/सिप पहिलेकै "More" भित्र ---------- */
+const L=$('links'),mr=L&&L.querySelector('.mr-m'),hm0=L&&L.querySelector('a[href="#home"]'),jy=L&&L.querySelector('a[href="#jyotish"]');
+if(mr&&hm0&&jy){hm0.parentNode.after(jy.parentNode);const ct=L.querySelector('a[href="#contact"]');if(ct)ct.parentNode.after(mr.parentNode);
+ ['skills','experience'].forEach(h=>{const a=L.querySelector('a[href="#'+h+'"]');if(a)mr.prepend(a.parentNode)})}
+
+/* ---------- ज्योतिष ट्याब: ३ समूह + उप-ट्याब (पुराना बटन भित्र लुकेर चल्छन्) ---------- */
+if(jf){const G=[
+ ['🌟 राशिफल र गोचर',[['🌟 राशिफल',['rs']],['🪐 गोचर',['gc']],['🔤 नाम बाट राशि',['nm']]]],
+ ['🔮 कुण्डली र भविष्य',[['🔮 जन्म कुण्डली',['kl','kl']],['🔭 भविष्यफल',['kl','kl','fu']],['💞 कुण्डली मिलान',['kl','ml']]]],
+ ['📅 पात्रो र मुहूर्त',[['📅 मासिक पात्रो',['pt','pt']],['🕉️ शुभ मुहूर्त',['pt','mh']],['🕐 चौघडिया / होरा',['cg']],['🗓 वार्षिक सूची',['yr']],['🎂 जन्मदिन / श्राद्ध',['rm']]]]];
+ jf.insertAdjacentHTML('beforebegin','<div class="crs-f" id="jg-f"></div><div class="crs-f jsb" id="jg-s"></div><p class="kl-no" id="jg-h" style="text-align:center;margin:-.8rem 0 1rem"></p>');
+ const gf=$('jg-f'),gs=$('jg-s'),hn=$('jg-h');let fu=0;
+ const cur=()=>{const b=jf.querySelector('button.on'),t=b?b.dataset.jt:'rs';let s=t;if(t==='kl'||t==='pt'){const o=$('jsb-'+t)&&$('jsb-'+t).querySelector('button.on');s=o?o.dataset.s:t}return[t,s]};
+ const render=()=>{const[t,s]=cur(),gi=Math.max(0,G.findIndex(g=>g[1].some(i=>i[1][0]===t)));
+  gf.innerHTML=G.map((g,i)=>`<button type="button" data-g="${i}" class="${i===gi?'on':''}">${g[0]}</button>`).join('');
+  gs.innerHTML=G[gi][1].map((i,j)=>{const a=i[1],on=a[2]?fu:(a[0]===t&&(a[1]||a[0])===s&&!(fu&&t==='kl'));return`<button type="button" data-g="${gi}" data-j="${j}" class="${on?'on':''}">${i[0]}</button>`}).join('')};
+ const act=a=>{fu=0;hn.textContent='';const b=jf.querySelector('[data-jt="'+a[0]+'"]');if(b)b.click();
+  if(a[1]){const x=$('jsb-'+a[0])&&$('jsb-'+a[0]).querySelector('[data-s="'+a[1]+'"]');if(x)x.click()}
+  if(a[2]){fu=1;const f=$('fu-box');if(f)f.scrollIntoView({behavior:'smooth',block:'start'});else hn.textContent='पहिले जन्म विवरण भरेर कुण्डली बनाउनुहोस् — भविष्यफल कुण्डलीको तल देखिन्छ।'}
+  render()};
+ gf.onclick=e=>{const b=e.target.closest('button');if(b)act(G[+b.dataset.g][1][0][1])};
+ gs.onclick=e=>{const b=e.target.closest('button');if(b)act(G[+b.dataset.g][1][+b.dataset.j][1])};
+ jf.addEventListener('click',()=>setTimeout(render,0));
+ ['kl','pt'].forEach(g=>{const x=$('jsb-'+g);if(x)x.addEventListener('click',()=>setTimeout(render,0))});
+ render()}
+
+/* ---------- भविष्यफल: विंशोत्तरी दशा + गुरु/शनि/राहु गोचर (चन्द्र राशिबाट) ---------- */
+const SG=['मेष','वृष','मिथुन','कर्कट','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुम्भ','मीन'],PN=['सूर्य','चन्द्र','मंगल','बुध','गुरु','शुक्र','शनि','राहु','केतु'],DL=['केतु','शुक्र','सूर्य','चन्द्र','मंगल','राहु','गुरु','शनि','बुध'],DY=[7,20,6,10,7,18,16,19,17],DLI=[8,5,0,1,2,7,4,6,3],SL=[2,5,3,1,0,3,5,2,4,6,6,4];
+const OR=['पहिलो','दोस्रो','तेस्रो','चौथो','पाँचौँ','छैटौँ','सातौँ','आठौँ','नवौँ','दसौँ','एघारौँ','बाह्रौँ'],BH=['शरीर, व्यक्तित्व र स्वभाव','धन, परिवार र बोली','साहस, भाइबहिनी र प्रयास','माता, घर, सुख र सवारी','सन्तान, शिक्षा र पूर्वपुण्य','रोग, ऋण र शत्रु','जीवनसाथी र साझेदारी','आयु, अचानक घटना र गोप्य कुरा','भाग्य, धर्म र पिता','कर्म, पेसा र प्रतिष्ठा','आम्दानी, लाभ र इच्छापूर्ति','खर्च, विदेश र मोक्ष'];
+const EX={0:0,1:1,2:9,3:5,4:3,5:11,6:6},OWN={0:[4],1:[3],2:[0,7],3:[2,5],4:[8,11],5:[1,6],6:[9,10]};
+const AR=[['विवाह / जीवनसाथी',7],['करियर / पद-प्रतिष्ठा',10],['धन / आम्दानी',11],['सन्तान / शिक्षा',5],['घर / सवारी',4],['विदेश / यात्रा',12],['भाग्य / धर्म',9]];
+const box=(t,b)=>`<div class="kl-box"><h3>${t}</h3>${b}</div>`,tb=(h,rows)=>`<div class="kl-tw"><table class="kl-t"><tr>${h.map(x=>'<th>'+x+'</th>').join('')}</tr>${rows}</table></div>`;
+
+function build(r){
+ const NS=360/27,YR=365.25*864e5,now=Date.now(),HZ=12*YR,D=864e5;
+ const as=Math.floor(r.asc/30),sg=r.sid.map(x=>Math.floor(x/30)),hs=sg.map(s=>(s-as+12)%12),ms=sg[1],mo=r.sid[1];
+ const hx={1:2,2:1,3:0,4:1,5:2,6:-1,7:1,8:-2,9:2,10:1,11:1,12:-1};
+ const own=p=>p<7?OWN[p].map(s=>(s-as+12)%12+1).sort((a,b)=>a-b):[];
+ const dg=p=>p>6?'':EX[p]===sg[p]?'उच्च':(EX[p]+6)%12===sg[p]?'नीच':OWN[p].includes(sg[p])?'स्वराशि':'';
+ const sc=p=>own(p).reduce((a,h)=>a+hx[h],0)+([1,2,4,5,7,9,10,11].includes(hs[p]+1)?1:[6,8,12].includes(hs[p]+1)?-1:0)+({'उच्च':2,'स्वराशि':1,'नीच':-2}[dg(p)]||0);
+ const lb=s=>s>=3?'🟢 शुभ':s>=1?'🟡 मध्यम-शुभ':s===0?'⚪ मिश्रित':'🔴 सावधानी';
+ const dp=t=>{const d=new Date(t+5.75*36e5);return ND(d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0'))};
+ const dd=t=>{const d=new Date(t+5.75*36e5);let b='';try{if(JP.ad2bs&&JP.bsTxt)b=JP.bsTxt(JP.ad2bs(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()))}catch(e){}return dp(t)+(b?'<br><small>'+b+'</small>':'')};
+ /* दशा */
+ const E=[];{let t=r.ms;for(let k=0;k<18;k++){const i=(Math.floor(mo/NS)%9+k)%9,len=k===0?(1-(mo%NS)/NS)*DY[i]:DY[i];E.push({i,t0:t,t1:t+len*YR});t+=len*YR}}
+ const A=[];E.forEach(e=>{let s=e.t1-DY[e.i]*YR;for(let j=0;j<9;j++){const a=(e.i+j)%9,en=s+DY[e.i]*DY[a]/120*YR,t0=Math.max(s,e.t0),t1=Math.min(en,e.t1);if(t1>t0&&en>now-5*YR&&s<now+HZ)A.push({t0,t1,f0:s,f1:en,md:e.i,ad:a,m0:e.t0,m1:e.t1});s=en}});
+ const cu=A.find(a=>now>=a.t0&&now<a.t1);if(!cu)return['<div class="kl-box">यो जन्म मितिको दशा अवधि अहिलेको मितिसँग मिलेन।</div>',()=>''];
+ let pd,PL=[];{let s=cu.f0;const L=cu.f1-cu.f0;for(let k=0;k<9;k++){const l=(cu.ad+k)%9,en=s+L*DY[l]/120;PL.push({l,t0:s,t1:en});if(now>=s&&now<en)pd=PL[k];s=en}}
+ /* गोचर */
+ const sidAt=t=>{const d=new Date(t);return JC(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate(),d.getUTCHours(),d.getUTCMinutes(),0,0,0).sid};
+ const ing=(p,t0,t1,stp)=>{const o=[];let sa=Math.floor(sidAt(t0)[p]/30);o.push({t:t0,s:sa});for(let t=t0+stp;t<=t1;t+=stp){const s=Math.floor(sidAt(t)[p]/30);if(s!==sa){let lo=t-stp,hi=t;for(let k=0;k<11;k++){const m=(lo+hi)/2;Math.floor(sidAt(m)[p]/30)===sa?lo=m:hi=m}o.push({t:hi,s,bk:p<7&&(s-sa+12)%12===11?1:0});sa=s}}return o};
+ const TJ=ing(4,now,now+HZ,6*D),TS=ing(6,now,now+HZ,8*D),TR=ing(7,now,now+HZ,15*D),hm=s=>(s-ms+12)%12+1;
+ const JG=[2,5,7,9,11],SGD=[3,6,11],RG=[3,6,10,11];
+ const jx=h=>JG.includes(h)?['🟢','गुरुको शुभ गोचर — धन, सन्तान, मान-सम्मान वा भाग्यका काम अघि बढ्न सक्छन्']:['⚪','गुरुको गोचर मध्यम — परिणाम दशा र आफ्नो मेहनतमा निर्भर'];
+ const sx=h=>SGD.includes(h)?['🟢','शनिको शुभ गोचर — मेहनतको फल, प्रगति र स्थिरता']:[12,1,2].includes(h)?['🔴','साढेसाती — जिम्मेवारी, खर्च र धैर्यको परीक्षा']:[4,8].includes(h)?['🟠','ढैया (चन्द्रबाट '+OR[h-1]+') — स्वास्थ्य, घर र मानसिक चिन्तामा सावधानी']:['⚪','शनिको गोचर मिश्रित'];
+ const rx=h=>RG.includes(h)?['🟢','राहुको शुभ गोचर — प्रयासले लाभ']:['⚪','राहु-केतु गोचर — भ्रम वा अचानक परिवर्तनमा सावधानी'];
+ const TX=[[4,TJ,jx],[6,TS,sx],[7,TR,rx]];
+ /* अहिलेको अवस्था */
+ const fx=p=>`<b>${PN[p]}</b>: ${p<7?own(p).map(h=>OR[h-1]).join(' र ')+' भावको स्वामी':'छायाग्रह (भावको स्वामित्व हुँदैन)'}, ${OR[hs[p]]} भावमा${dg(p)?' ('+dg(p)+')':''} — ${lb(sc(p))}। ${p<7?own(p).map(h=>BH[h-1]).join(' / ')+' र ':''}${BH[hs[p]]} सँग सम्बन्धित क्षेत्रमा फल देखिन्छ।`;
+ const now1=box('🔭 अहिलेको दशा-अवधि',`<ul class="kl-ul"><li><b>महादशा ${DL[cu.md]}</b> (${dp(cu.m0)} → ${dp(cu.m1)}): ${fx(DLI[cu.md])}</li><li><b>अन्तर्दशा ${DL[cu.ad]}</b> (${dp(cu.t0)} → ${dp(cu.t1)}): ${fx(DLI[cu.ad])}</li>${pd?`<li><b>प्रत्यन्तर ${DL[pd.l]}</b> (${dp(pd.t0)} → ${dp(pd.t1)}): ${fx(DLI[pd.l])}</li>`:''}</ul>`);
+ const now2=box('🪐 आजको गोचर (चन्द्र राशिबाट)',`<ul class="kl-ul">${TX.map(([p,T,f])=>{const h=hm(T[0].s),x=f(h);return`<li><b>${PN[p]}</b> ${SG[T[0].s]} राशिमा, चन्द्रबाट ${OR[h-1]} — ${x[0]} ${x[1]}</li>`}).join('')}</ul>`);
+ /* वर्षवार */
+ const y0=new Date(now).getUTCFullYear();let yr='';
+ for(let k=0;k<10;k++){const t=Date.UTC(y0+k,6,1),a=A.find(q=>t>=q.t0&&t<q.t1),sd=sidAt(t),jh=hm(Math.floor(sd[4]/30)),sh=hm(Math.floor(sd[6]/30));if(!a)continue;
+  const v=sc(DLI[a.md])+sc(DLI[a.ad])+(JG.includes(jh)?1:0)+(SGD.includes(sh)?1:[12,1,2,4,8].includes(sh)?-1:0);
+  yr+=`<tr><td>${ND(y0+k)}</td><td>${DL[a.md]} / ${DL[a.ad]}</td><td>${OR[jh-1]}${JG.includes(jh)?' ✔':''}</td><td>${OR[sh-1]}${SGD.includes(sh)?' ✔':[12,1,2,4,8].includes(sh)?' ✖':''}</td><td>${v>=6?'🟢 उत्तम':v>=4?'🟢 शुभ':v>=2?'🟡 मध्यम':v>=0?'⚪ मिश्रित':'🔴 कठिन'}</td></tr>`}
+ const yb=box('📈 आगामी १० वर्षको रूपरेखा',tb(['वर्ष (मध्य)','महा / अन्तर्दशा','गुरु (चन्द्रबाट)','शनि (चन्द्रबाट)','समग्र प्रवृत्ति'],yr)+'<p class="kl-no" style="margin-top:.6rem">समग्र = दशास्वामीको बल (भाव स्वामित्व + स्थिति + उच्च/नीच) + गुरु (२,५,७,९,११ शुभ) + शनि (३,६,११ शुभ; १२,१,२,४,८ कठिन)। यो सापेक्ष प्रवृत्ति हो, पक्का घटना होइन।</p>');
+ /* मितिवार घटना */
+ const EV=[];A.forEach((a,k)=>{if(a.t0>now&&a.t0<now+HZ){const nw=A[k-1]&&A[k-1].md!==a.md;EV.push({t:a.t0,x:nw?`🔔 <b>${DL[a.md]} महादशा</b> सुरु (पहिलो अन्तर्दशा ${DL[a.ad]})`:`🕒 ${DL[a.md]} महादशामा <b>${DL[a.ad]} अन्तर्दशा</b> सुरु`,y:lb(sc(DLI[a.ad]))+' ('+PN[DLI[a.ad]]+' को बल)'})}});
+ TX.forEach(([p,T,f])=>T.slice(1).forEach(q=>{const h=hm(q.s),x=f(h);EV.push({t:q.t,x:`🪐 <b>${PN[p]}</b> ${SG[q.s]} राशिमा${q.bk?' (वक्री भई फर्केको)':''} — चन्द्रबाट ${OR[h-1]}`,y:x[0]+' '+x[1]})}));
+ EV.sort((a,b)=>a.t-b.t);
+ const eb=box('🗓 मितिवार प्रमुख परिवर्तन (अबको १२ वर्ष)',tb(['मिति','घटना','असर'],EV.map(e=>`<tr><td>${dd(e.t)}</td><td>${e.x}</td><td>${e.y}</td></tr>`).join('')));
+ /* साढेसाती / ढैया */
+ const TL=ing(6,now-9*YR,now+30*YR,10*D),SS=[];TL.forEach((q,i)=>{const h=hm(q.s),c=[12,1,2].includes(h)?'साढेसाती':h===4?'ढैया (४औँ)':h===8?'ढैया (८औँ)':'',e=i<TL.length-1?TL[i+1].t:now+30*YR,Lq=SS[SS.length-1];if(!c)return;if(Lq&&Lq.c===c&&q.t-Lq.e<D)Lq.e=e;else SS.push({c,s:q.t,e})});
+ const ss=box('⚖️ साढेसाती / ढैया (अबको ३० वर्ष)',SS.filter(q=>q.e>now).length?`<ul class="kl-ul">${SS.filter(q=>q.e>now).map(q=>`<li><b>${q.c}</b>: ${q.s<now-8*YR?'पहिले देखि':dp(q.s)} → ${dp(q.e)}${q.s<=now&&q.e>now?' ← अहिले':''}</li>`).join('')}</ul>`:'<p>अबको ३० वर्षमा साढेसाती / ढैया भेटिएन।</p>');
+ /* जीवन क्षेत्र अनुसार अनुकूल अवधि */
+ const rel=(p,H)=>SL[(as+H-1)%12]===p||hs[p]+1===H,JS=TJ.map((x,i)=>({t0:x.t,t1:i<TJ.length-1?TJ[i+1].t:now+HZ,s:x.s}));
+ const wr=H=>{const ts=(as+H-1)%12,o=[];A.forEach(a=>{if(a.t1<=now)return;const pa=DLI[a.ad];if(!rel(pa,H))return;JS.forEach(j=>{if(![0,4,6,8].includes((ts-j.s+12)%12))return;const s=Math.max(a.t0,j.t0,now),e=Math.min(a.t1,j.t1,now+HZ);if(e-s<20*D)return;const q=o[o.length-1];if(q&&q.ad===a.ad&&q.md===a.md&&s-q.e<3*D)q.e=e;else o.push({s,e,md:a.md,ad:a.ad,mr:rel(DLI[a.md],H)})})});
+  return o.length?`<ul class="kl-ul">${o.slice(0,10).map(w=>`<li><b>${dp(w.s)} → ${dp(w.e)}</b> — ${DL[w.md]} / ${DL[w.ad]} अन्तर्दशा (${PN[DLI[w.ad]]} ${OR[H-1]} भावसँग सम्बन्धित${w.mr?', महादशा स्वामी पनि ★':''}) र गुरुको गोचर वा दृष्टि यो भावमा</li>`).join('')}</ul>`:'<p>अबको १२ वर्षमा दशा र गुरु गोचर दुवै मिल्ने अवधि भेटिएन।</p>'};
+ const ab=box('🎯 जीवनको क्षेत्र अनुसार अनुकूल अवधि',`<div class="kl-f"><div class="wide"><label>क्षेत्र छान्नुहोस्</label><select id="fu-h">${AR.map(a=>`<option value="${a[1]}">${a[0]}</option>`).join('')}</select></div></div><p class="kl-no">नियम: अन्तर्दशा स्वामी त्यो भावको स्वामी वा त्यसमा बसेको हुनुपर्छ, र साथै गुरु त्यही राशिमा वा त्यसलाई हेर्ने (५, ७, ९) स्थानमा गोचर गरिरहेको हुनुपर्छ। ★ = महादशा स्वामी पनि सम्बन्धित।</p><div id="fu-w">${wr(7)}</div>`);
+ const nt='<p class="kl-no">📍 यो भविष्यफल विंशोत्तरी दशा र गुरु/शनि/राहुको गोचर (चन्द्र राशिबाट) को शास्त्रीय नियमबाट गणना गरिएको प्रवृत्ति हो — पक्का घटना होइन। मिति ग्रह-गणनाबाट आएकाले जन्म समयको शुद्धतामा निर्भर छन् (४ मिनेट फरकले लग्न करिब १° सर्छ; दशा मितिमा केही दिन देखि हप्ता सम्म फरक पर्न सक्छ)। ठूला निर्णयका लागि अनुभवी ज्योतिषीसँग परामर्श गर्नुहोस्।</p>';
+ return[`<div id="fu-box"><h2 class="grad" style="text-align:center;font-family:Syne,sans-serif;font-size:1.4rem;margin:1.6rem 0 1rem">🔭 भविष्यफल (दशा र गोचर)</h2>${now1}${now2}${yb}${ab}${eb}${ss}${nt}</div>`,wr]}
+window.JFU=build;
+
+if(ko&&$('kl-f')&&JC)new MutationObserver(()=>{if(!ko.querySelector('.kl-sum')||ko.querySelector('#fu-box'))return;
+ try{const dv=$('kl-d').value,[Y,Mo,Da]=dv.split('-').map(Number),[Hh,Mi]=$('kl-t').value.split(':').map(Number),pi=+$('kl-p').value;let lat,lon,tz;
+  if(pi>=NPD.length){lat=parseFloat($('kl-la').value);lon=parseFloat($('kl-lo').value);tz=parseFloat($('kl-tz').value)}else{lat=NPD[pi][1];lon=NPD[pi][2];tz=Y<1986?5.5:5.75}
+  const[h,wr]=build(JC(Y,Mo,Da,Hh,Mi,tz,lat,lon));ko.insertAdjacentHTML('beforeend',h);
+  const sl=$('fu-h');if(sl)sl.onchange=()=>{$('fu-w').innerHTML=wr(+sl.value)};
+  const bar=ko.querySelector('.kl-bar');if(bar&&!$('fu-j')){bar.insertAdjacentHTML('beforeend','<button type="button" id="fu-j">🔭 भविष्यफल</button>');$('fu-j').onclick=()=>$('fu-box').scrollIntoView({behavior:'smooth',block:'start'})}
+ }catch(e){ko.insertAdjacentHTML('beforeend','<div class="kl-box" id="fu-box">भविष्यफल गणना गर्न सकिएन।</div>')}}).observe(ko,{childList:true});
+})();
