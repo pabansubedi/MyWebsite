@@ -9,7 +9,6 @@ document.head.appendChild(st);
 const sec=document.createElement('section');sec.id='tools2';sec.className='cs';
 sec.innerHTML=`<div class="ct"><div class="sh fu"><div class="st">More Tools</div><h2>नेपाली <span class="grad">अनलाइन टूल्स</span></h2></div><div class="tz-g tm-g">
 <div class="tz-c"><h3>🔢 अङ्क → नेपाली शब्द</h3><label>रकम</label><input type="text" id="nw-i" inputmode="decimal" placeholder="1250075.50"><div class="tz-r" id="nw-o">रकम हालेपछि शब्दमा देखिन्छ।</div></div>
-<div class="tz-c"><h3>🎂 वि.सं. उमेर क्याल्कुलेटर</h3><label>जन्म मिति (वि.सं.)</label><input type="text" id="ba-i" placeholder="2055-01-29"><div class="tz-r" id="ba-o">मिति हालेपछि उमेर देखिन्छ।</div></div>
 <div class="tz-c wide"><h3>⌨️ टाइपिङ स्पिड टेस्ट (६० सेकेन्ड)</h3><select id="ty-l"><option value="e">English</option><option value="n">नेपाली (Unicode)</option></select><div class="tm-ty" id="ty-t" style="margin-top:.8rem"></div><textarea id="ty-i" placeholder="यहाँ टाइप गर्न सुरु गर्नुहोस्…" style="margin-top:.6rem;min-height:70px"></textarea><button class="tm-b" id="ty-n">नयाँ टेस्ट</button><div class="tz-r" id="ty-o">टाइप गर्न थालेपछि समय सुरु हुन्छ।</div></div>
 <div class="tz-c"><h3>🔐 पासवर्ड जेनेरेटर</h3><label>लम्बाइ: <span id="pw-n">16</span></label><input type="range" id="pw-l" min="8" max="64" value="16"><label><input type="checkbox" id="pw-s" checked> चिन्ह (!@#)</label><button class="tm-b" id="pw-b">बनाउनुहोस्</button><button class="tm-b o" id="pw-c">कपी</button><div class="tz-r" id="pw-o"></div></div>
 <div class="tz-c wide"><h3>💱 विनिमय दर (NRB) ‑ र सुन/चाँदी क्याल्कुलेटर</h3><div id="fx-o" class="tz-r">दर लोड गर्दै…</div><label>रकम</label><input type="text" id="fx-a" value="100"><select id="fx-c" style="margin-top:.5rem"></select><div class="tz-r" id="fx-r"></div>
@@ -23,11 +22,6 @@ function words(n){if(n===0)return W[0];const u=[['खर्ब',1e11],['अर�
 $('nw-i').oninput=e=>{const v=EN(e.target.value).replace(/,/g,'').trim(),o=$('nw-o');if(!v)return o.textContent='रकम हालेपछि शब्दमा देखिन्छ।';
  const x=parseFloat(v);if(!isFinite(x)||x<0||x>=1e13)return o.textContent='कृपया ० देखि १० खर्ब भित्रको सङ्ख्या हाल्नुहोस्।';
  const r=Math.floor(x),p=Math.round((x-r)*100);o.innerHTML=`<b>रु ${ND(r.toLocaleString('en-IN'))}</b><br>${words(r)} रुपैयाँ${p?' '+words(p)+' पैसा':''} मात्र`};
-/* ---------- BS उमेर ---------- */
-$('ba-i').oninput=e=>{const o=$('ba-o'),J=window.JP,a=J&&J.parseD?J.parseD(e.target.value,'BS'):null;if(!a)return o.textContent='सही वि.सं. मिति हाल्नुहोस् (जस्तै 2055-01-29, वर्ष २०००–२०९९)।';
- const n=new Date(),b=new Date(Date.UTC(a[0],a[1]-1,a[2])),t=new Date(Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()));if(b>t)return o.textContent='जन्म मिति भविष्यमा छ।';
- let y=t.getUTCFullYear()-b.getUTCFullYear(),m=t.getUTCMonth()-b.getUTCMonth(),d=t.getUTCDate()-b.getUTCDate();if(d<0){m--;d+=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),0)).getUTCDate()}if(m<0){y--;m+=12}
- o.innerHTML=`<b>${ND(y)} वर्ष ${ND(m)} महिना ${ND(d)} दिन</b><br>अङ्ग्रेजी मिति: ${a.join('-')} · जम्मा दिन: ${ND(Math.floor((t-b)/864e5))}`};
 /* ---------- टाइपिङ ---------- */
 const TX={e:['The quick brown fox jumps over the lazy dog while the sun sets behind the quiet hills of Nepal.','Computer skills open many doors today, so practise typing every day and your speed will grow.'],n:['नेपाल हिमाल, पहाड र तराईले सजिएको सुन्दर देश हो।','कम्प्युटर सिक्नाले आजको समयमा धेरै अवसर खोल्छ, त्यसैले हरेक दिन अभ्यास गर्नुहोस्।']};
 let tS=0,tT=null,tTxt='';
@@ -50,5 +44,27 @@ let FX=[];const fxr=()=>{const a=parseFloat(EN($('fx-a').value)),c=FX[+$('fx-c')
  $('fx-o').innerHTML=`नेपाल राष्ट्र बैंकको दर · मिति ${p.date||''}`;$('fx-a').oninput=$('fx-c').onchange=fxr;fxr()}catch(e){$('fx-o').textContent='लाइभ दर लोड भएन (इन्टरनेट वा API समस्या)। सुन/चाँदी क्याल्कुलेटर तल प्रयोग गर्न सकिन्छ।'}})();
 const gd=()=>{const p=parseFloat(EN($('gd-p').value)),w=parseFloat(EN($('gd-w').value));if(!p||!w)return;$('gd-o').innerHTML=`<b>रु ${ND((p*w).toLocaleString('en-IN'))}</b> · प्रति ग्राम रु ${ND((p/11.664).toFixed(0))} · प्रति १० ग्राम रु ${ND((p/11.664*10).toFixed(0))}`};
 $('gd-p').oninput=$('gd-w').oninput=gd;
-window.TM={words};
+/* ---------- एकीकृत उमेर क्याल्कुलेटर (BS/AD) — पुरानो कार्ड बदल्छ ---------- */
+(function(){const old=$('ag-d');if(!old)return;const card=old.closest('.tz-c');if(!card)return;let cal='BS';
+card.innerHTML=`<h3>🎂 उमेर क्याल्कुलेटर</h3><div id="ag-t" style="display:flex;gap:.5rem"><button type="button" class="tm-b" data-c="BS" style="margin:0">वि.सं. (BS)</button><button type="button" class="tm-b o" data-c="AD" style="margin:0">अङ्ग्रेजी (AD)</button></div><label id="ag-lb">जन्म मिति (वि.सं.) — YYYY-MM-DD</label><input type="text" id="ag-i" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="2060-01-15"><div class="tz-r" id="ag-o">सङ्ख्या मात्र टाइप गर्नुहोस्, "-" आफैँ आउँछ।</div>`;
+const inp=$('ag-i'),out=$('ag-o'),MSG=out.textContent;
+function fmt(raw,del){const d=EN(raw).replace(/\D/g,'').slice(0,8);let p=[d.slice(0,4)],i=4;
+ if(d.length>4){const a=d[4];if(+a>1){p.push('0'+a);i=5}else{p.push(d.slice(4,6));i=6}}
+ if(d.length>i){const a=d[i];if(+a>3){p.push('0'+a)}else p.push(d.slice(i,i+2))}
+ let s=p.join('-');if(!del&&((p.length===1&&p[0].length===4)||(p.length===2&&p[1].length===2)))s+='-';return s}
+function calc(){const v=inp.value;if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){out.textContent=v?'पूरा मिति टाइप गर्नुहोस् (वर्ष-महिना-गते)।':MSG;return}
+ const[y,m,d]=v.split('-').map(Number);let a;
+ if(cal==='BS'){a=window.JP&&JP.parseD(v,'BS');if(!a)return out.textContent='यो वि.सं. मिति मिलेन (वर्ष २०००–२०९९ र गते महिनाको दिनभित्र हुनुपर्छ)।'}
+ else{const x=new Date(Date.UTC(y,m-1,d));if(y<1900||x.getUTCFullYear()!==y||x.getUTCMonth()!==m-1||x.getUTCDate()!==d)return out.textContent='यो AD मिति मिलेन।';a=[y,m,d]}
+ const n=new Date(),T=Date.UTC(n.getFullYear(),n.getMonth(),n.getDate()),B=Date.UTC(a[0],a[1]-1,a[2]);if(B>T)return out.textContent='भविष्यको मिति हुन सक्दैन।';
+ const t=new Date(T);let yy=t.getUTCFullYear()-a[0],mm=t.getUTCMonth()-(a[1]-1),dd=t.getUTCDate()-a[2];
+ if(dd<0){mm--;dd+=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),0)).getUTCDate()}if(mm<0){yy--;mm+=12}
+ let nb=Date.UTC(t.getUTCFullYear(),a[1]-1,a[2]);if(nb<=T)nb=Date.UTC(t.getUTCFullYear()+1,a[1]-1,a[2]);
+ const J=window.JP,other=cal==='BS'?`AD: ${a.join('-')}`:`वि.सं.: ${J&&J.ad2bs&&J.ad2bs(a[0],a[1],a[2])?J.bsTxt(J.ad2bs(a[0],a[1],a[2])):'—'}`;
+ out.innerHTML=`तपाईंको उमेर: <b>${ND(yy)} वर्ष ${ND(mm)} महिना ${ND(dd)} दिन</b><br>जम्मा दिन: ${ND(Math.floor((T-B)/864e5))} · अर्को जन्मदिनमा ${ND(Math.round((nb-T)/864e5))} दिन बाँकी<br><small>${other}</small>`}
+inp.addEventListener('input',e=>{const del=(e.inputType||'').startsWith('delete');inp.value=fmt(inp.value,del);calc()});
+$('ag-t').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cal=b.dataset.c;[...$('ag-t').children].forEach(x=>x.classList.toggle('o',x!==b));
+ $('ag-lb').textContent=cal==='BS'?'जन्म मिति (वि.सं.) — YYYY-MM-DD':'जन्म मिति (AD) — YYYY-MM-DD';inp.placeholder=cal==='BS'?'2060-01-15':'2003-04-28';inp.value='';calc()});
+window.TM_fmt=fmt})();
+window.TM={words,fmt:window.TM_fmt};
 })();
