@@ -1560,7 +1560,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
     if(pi===PLC.length-1){lat=parseFloat($k('kl-la').value);lon=parseFloat($k('kl-lo').value);tz=parseFloat($k('kl-tz').value);pn='हातले हालेको स्थान';
       if(isNaN(lat)||isNaN(lon)||isNaN(tz)||Math.abs(lat)>66||Math.abs(lon)>180){out.innerHTML='<div class="kl-box">कृपया सही अक्षांश, देशान्तर र समय क्षेत्र हाल्नुहोस् (उदाहरण: 27.7172, 85.3240, 5.75)।</div>';return}}
     else{lat=PLC[pi][1];lon=PLC[pi][2];tz=Y<1986?5.5:5.75}
-    const r=calc(Y,Mo,Da,Hh,Mi,tz,lat,lon);
+    const r=calc(Y,Mo,Da,Hh,Mi,tz,lat,lon);window.JLAST={r};
     const JP=window.JP||{};LAST=build(r,{name:$k('kl-nm').value.trim(),d:dv,t:tv,place:pn,tz,en:JP.enD?JP.enD(Y,Mo,Da):dv,bs:JP.bsTxt?JP.bsTxt(JP.ad2bs(Y,Mo,Da)):''});
     out.innerHTML=`<div class="kl-bar"><button type="button" id="kl-pr">🖨️ PDF डाउनलोड / प्रिन्ट</button><span>खुल्ने विन्डोमा "Save as PDF" (PDF को रूपमा सेभ) छान्नुहोस्</span></div>`+LAST;
     $k('kl-pr').onclick=printPdf;
@@ -1597,6 +1597,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
 
 </script>
 <script src="jyotish-plus.js?v=13"></script>
+<script src="jyotish-more.js?v=1"></script>
 
 <!-- राइट क्लिक र भ्यू सोर्स रोक्ने सुरक्षा कोड यहाँ राख्नुहोस् -->
 <script>
