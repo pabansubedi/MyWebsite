@@ -45,8 +45,8 @@ let FX=[];const fxr=()=>{const a=parseFloat(EN($('fx-a').value)),c=FX[+$('fx-c')
 const gd=()=>{const p=parseFloat(EN($('gd-p').value)),w=parseFloat(EN($('gd-w').value));if(!p||!w)return;$('gd-o').innerHTML=`<b>रु ${ND((p*w).toLocaleString('en-IN'))}</b> · प्रति ग्राम रु ${ND((p/11.664).toFixed(0))} · प्रति १० ग्राम रु ${ND((p/11.664*10).toFixed(0))}`};
 $('gd-p').oninput=$('gd-w').oninput=gd;
 /* ---------- एकीकृत उमेर क्याल्कुलेटर (BS/AD) — पुरानो कार्ड बदल्छ ---------- */
-(function(){const old=$('ag-d');if(!old)return;const card=old.closest('.tz-c');if(!card)return;let cal='BS';
-card.innerHTML=`<h3>🎂 उमेर क्याल्कुलेटर</h3><div id="ag-t" style="display:flex;gap:.5rem"><button type="button" class="tm-b" data-c="BS" style="margin:0">वि.सं. (BS)</button><button type="button" class="tm-b o" data-c="AD" style="margin:0">अङ्ग्रेजी (AD)</button></div><label id="ag-lb">जन्म मिति (वि.सं.) — YYYY-MM-DD</label><input type="text" id="ag-i" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="2060-01-15"><div class="tz-r" id="ag-o">सङ्ख्या मात्र टाइप गर्नुहोस्, "-" आफैँ आउँछ।</div>`;
+(function(){const cv=$('cv-ad');if(cv){const cc=cv.closest('.tz-c');if(cc)cc.remove()}const old=$('ag-d');if(!old)return;const card=old.closest('.tz-c');if(!card)return;let cal='BS';
+card.innerHTML=`<h3>📅 मिति परिवर्तक र उमेर (AD ↔ BS)</h3><div id="ag-t" style="display:flex;gap:.5rem"><button type="button" class="tm-b" data-c="BS" style="margin:0">वि.सं. (BS)</button><button type="button" class="tm-b o" data-c="AD" style="margin:0">अङ्ग्रेजी (AD)</button></div><label id="ag-lb">मिति (वि.सं.) — YYYY-MM-DD</label><input type="text" id="ag-i" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="2060-01-15"><div class="tz-r" id="ag-o">सङ्ख्या मात्र टाइप गर्नुहोस्, "-" आफैँ आउँछ।</div>`;
 const inp=$('ag-i'),out=$('ag-o'),MSG=out.textContent;
 function fmt(raw,del){const d=EN(raw).replace(/\D/g,'').slice(0,8);let p=[d.slice(0,4)],i=4;
  if(d.length>4){const a=d[4];if(+a>1){p.push('0'+a);i=5}else{p.push(d.slice(4,6));i=6}}
@@ -61,12 +61,11 @@ function calc(){const v=inp.value;if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){out.textCon
  if(dd<0){mm--;dd+=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),0)).getUTCDate()}if(mm<0){yy--;mm+=12}
  let nb=Date.UTC(t.getUTCFullYear(),a[1]-1,a[2]);if(nb<=T)nb=Date.UTC(t.getUTCFullYear()+1,a[1]-1,a[2]);
  const J=window.JP,WD=['आइतबार','सोमबार','मङ्गलबार','बुधबार','बिहीबार','शुक्रबार','शनिबार'],pad=x=>String(x).padStart(2,'0'),adS=a.map(pad).join('-'),
- other=cal==='BS'?`AD: ${adS}`:`वि.सं.: ${J&&J.ad2bs&&J.ad2bs(a[0],a[1],a[2])?J.bsTxt(J.ad2bs(a[0],a[1],a[2])):'—'}`,
- nd=new Date(nb),nbs=J&&J.ad2bs&&J.ad2bs(nd.getUTCFullYear(),nd.getUTCMonth()+1,nd.getUTCDate());
- out.innerHTML=`तपाईंको उमेर: <b>${ND(yy)} वर्ष ${ND(mm)} महिना ${ND(dd)} दिन</b><br>जन्म बार: <b>${WD[new Date(B).getUTCDay()]}</b><br>जम्मा दिन: ${ND(Math.floor((T-B)/864e5))}<br>अर्को जन्मदिन: <b>${WD[nd.getUTCDay()]}</b> · ${ND(Math.round((nb-T)/864e5))} दिन बाँकी<br><small>${other}</small>`}
+ bs=cal==='BS'?[y,m,d]:(J&&J.ad2bs&&J.ad2bs(a[0],a[1],a[2])),nd=new Date(nb);
+ out.innerHTML=`AD: <b>${J&&J.enD?J.enD(a[0],a[1],a[2]):adS}</b> (${adS})<br>वि.सं.: <b>${bs&&J&&J.bsTxt?J.bsTxt(bs):'—'}</b> (${bs?bs.map(pad).join('-'):'—'})<br>बार: <b>${WD[new Date(B).getUTCDay()]}</b><hr style="border:0;border-top:1px dashed var(--bd);margin:.6rem 0">तपाईंको उमेर: <b>${ND(yy)} वर्ष ${ND(mm)} महिना ${ND(dd)} दिन</b><br>जम्मा दिन: ${ND(Math.floor((T-B)/864e5))}<br>अर्को जन्मदिन: <b>${WD[nd.getUTCDay()]}</b> · ${ND(Math.round((nb-T)/864e5))} दिन बाँकी`}
 inp.addEventListener('input',e=>{const del=(e.inputType||'').startsWith('delete');inp.value=fmt(inp.value,del);calc()});
 $('ag-t').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cal=b.dataset.c;[...$('ag-t').children].forEach(x=>x.classList.toggle('o',x!==b));
- $('ag-lb').textContent=cal==='BS'?'जन्म मिति (वि.सं.) — YYYY-MM-DD':'जन्म मिति (AD) — YYYY-MM-DD';inp.placeholder=cal==='BS'?'2060-01-15':'2003-04-28';inp.value='';calc()});
+ $('ag-lb').textContent=cal==='BS'?'मिति (वि.सं.) — YYYY-MM-DD':'मिति (AD) — YYYY-MM-DD';inp.placeholder=cal==='BS'?'2060-01-15':'2003-04-28';inp.value='';calc()});
 window.TM_fmt=fmt})();
 window.TM={words,fmt:window.TM_fmt};
 })();
