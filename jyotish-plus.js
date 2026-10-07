@@ -518,7 +518,7 @@ window.JCARD=(mb,u)=>{const g=s=>{const x=mb.querySelector(s);return x?x.textCon
  const wr=(t,y,w,lh,mx)=>{let l='',n=0;for(const wd of t.split(' ')){const s=l?l+' '+wd:wd;if(x.measureText(s).width>w&&l){x.fillText(l,540,y+n*lh);n++;l=wd;if(n>=mx)return}else l=s}if(l&&n<mx)x.fillText(l,540,y+n*lh)};
  x.font='190px '+F;x.fillText(g('.crs-bi'),540,250);x.font='bold 76px '+F;x.fillText(g('h3').replace(/\s+[A-Za-z].*$/,''),540,370);
  x.font='30px '+F;x.globalAlpha=.85;wr(g('.crs-meta span').replace(/^📅\s*/,''),425,900,40,2);x.globalAlpha=1;
- x.font='46px '+F;wr(g('.crs-sum'),560,900,66,6);x.font='32px '+F;wr(g('.rs-ch'),930,940,42,2);x.font='bold 34px '+F;x.fillText(u.replace(/^https?:\/\//,'').replace(/[?#].*$/,''),540,1030);
+ x.font='46px '+F;wr(g('.crs-sum'),560,900,66,6);x.font='32px '+F;wr(g('.rs-ch'),930,940,42,2);x.font='bold 34px '+F;x.fillText(u.replace(/^https?:\/\//,'').replace(/[?#].*$/,'').replace(/\/+$/,''),540,1030);
  c.toBlob(b=>{const f=new File([b],'rashifal.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],text:u}).catch(()=>{});else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='rashifal.png';a.click()}})};
 
 /* ---- PWA ---- */
