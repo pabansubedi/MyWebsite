@@ -60,8 +60,10 @@ function calc(){const v=inp.value;if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){out.textCon
  const t=new Date(T);let yy=t.getUTCFullYear()-a[0],mm=t.getUTCMonth()-(a[1]-1),dd=t.getUTCDate()-a[2];
  if(dd<0){mm--;dd+=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),0)).getUTCDate()}if(mm<0){yy--;mm+=12}
  let nb=Date.UTC(t.getUTCFullYear(),a[1]-1,a[2]);if(nb<=T)nb=Date.UTC(t.getUTCFullYear()+1,a[1]-1,a[2]);
- const J=window.JP,other=cal==='BS'?`AD: ${a.join('-')}`:`वि.सं.: ${J&&J.ad2bs&&J.ad2bs(a[0],a[1],a[2])?J.bsTxt(J.ad2bs(a[0],a[1],a[2])):'—'}`;
- out.innerHTML=`तपाईंको उमेर: <b>${ND(yy)} वर्ष ${ND(mm)} महिना ${ND(dd)} दिन</b><br>जम्मा दिन: ${ND(Math.floor((T-B)/864e5))} · अर्को जन्मदिनमा ${ND(Math.round((nb-T)/864e5))} दिन बाँकी<br><small>${other}</small>`}
+ const J=window.JP,WD=['आइतबार','सोमबार','मङ्गलबार','बुधबार','बिहीबार','शुक्रबार','शनिबार'],pad=x=>String(x).padStart(2,'0'),adS=a.map(pad).join('-'),
+ other=cal==='BS'?`AD: ${adS}`:`वि.सं.: ${J&&J.ad2bs&&J.ad2bs(a[0],a[1],a[2])?J.bsTxt(J.ad2bs(a[0],a[1],a[2])):'—'}`,
+ nd=new Date(nb),nbs=J&&J.ad2bs&&J.ad2bs(nd.getUTCFullYear(),nd.getUTCMonth()+1,nd.getUTCDate());
+ out.innerHTML=`तपाईंको उमेर: <b>${ND(yy)} वर्ष ${ND(mm)} महिना ${ND(dd)} दिन</b><br>जन्म बार: <b>${WD[new Date(B).getUTCDay()]}</b><br>जम्मा दिन: ${ND(Math.floor((T-B)/864e5))}<br>अर्को जन्मदिन: <b>${WD[nd.getUTCDay()]}</b> · ${ND(Math.round((nb-T)/864e5))} दिन बाँकी<br><small>${other}</small>`}
 inp.addEventListener('input',e=>{const del=(e.inputType||'').startsWith('delete');inp.value=fmt(inp.value,del);calc()});
 $('ag-t').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cal=b.dataset.c;[...$('ag-t').children].forEach(x=>x.classList.toggle('o',x!==b));
  $('ag-lb').textContent=cal==='BS'?'जन्म मिति (वि.सं.) — YYYY-MM-DD':'जन्म मिति (AD) — YYYY-MM-DD';inp.placeholder=cal==='BS'?'2060-01-15':'2003-04-28';inp.value='';calc()});
