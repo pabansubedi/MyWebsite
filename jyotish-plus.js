@@ -306,17 +306,6 @@ function fd(){const P=+$('fd-p').value,r=+$('fd-r').value/100,t=+$('fd-y').value
  addEventListener('keydown',e=>{if(e.key==='Escape')set(false)});
 })();
 
-/* ---- Mero Hisab app ---- */
-(function(){
- const URL='https://script.google.com/macros/s/AKfycbx_2N9Sg71TA1JomN7MikaqXMFQSiW36a4aDmVy1Hpf20u6hV_TSj33-MkHzY9R3FE/exec';
- const sub=document.querySelector('.mr-m'),ul=document.getElementById('links');
- const li=document.createElement('li');li.innerHTML='<a href="'+URL+'" target="_blank" rel="noopener">📒 Mero Hisab ↗</a>';
- (sub||ul).appendChild(li);
- const tg=document.querySelector('.tz-g'),tf=document.getElementById('tz-f');
- if(tg&&tf){tf.insertAdjacentHTML('beforeend','<button data-t="app">📒 Mero Hisab</button>');
-  tg.insertAdjacentHTML('beforeend','<div class="tz-c wide" data-g="app" style="display:none;text-align:center"><h3>📒 Mero Hisab</h3><p style="color:var(--dim);line-height:1.7;margin-bottom:1rem">मेरो हिसाब एप नयाँ ट्याबमा खोल्नुहोस्।</p><a class="btn bp" href="'+URL+'" target="_blank" rel="noopener">Mero Hisab खोल्नुहोस् ↗</a></div>')}
-})();
-
 /* =====================================================================
    PLUS 3: चौघडिया/होरा, गोचर, नाम बाट राशि, राशिफल शेयर, धेरै कुण्डली सेभ
    ===================================================================== */

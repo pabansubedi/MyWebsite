@@ -1267,10 +1267,15 @@ $$('.sk').forEach(c=>{
 
 // 5) hero drifts away + fades while scrolling
 const hc=$('.hc');
-addEventListener('scroll',()=>{
+const desktopHeroMotion=matchMedia('(hover:hover) and (min-width:969px)');
+function updateHeroMotion(){
+  if(!desktopHeroMotion.matches){hc.style.removeProperty('transform');hc.style.removeProperty('opacity');return}
   const y=scrollY;if(y>innerHeight)return;
   hc.style.transform=`translateY(${y*.18}px)`;hc.style.opacity=Math.max(0,1-y/(innerHeight*.9));
-},{passive:true});
+}
+addEventListener('scroll',updateHeroMotion,{passive:true});
+addEventListener('resize',updateHeroMotion);
+updateHeroMotion();
 
 // 6) rocket back-to-top with progress ring
 const up=$('#up'),upr=$('#upr');
@@ -1600,7 +1605,7 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
 })();
 
 </script>
-<script src="jyotish-plus.js?v=14"></script>
+<script src="jyotish-plus.js?v=15"></script>
 <script src="jyotish-more.js?v=1"></script>
 <script src="tools-more.js?v=2"></script>
 
