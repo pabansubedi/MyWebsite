@@ -25,7 +25,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--p:#8b5cf6;--s:#ec4899;--a:#06b6d4;--l:#a3e635;--bg:#08080c;--bg2:#101018;--card:rgba(255,255,255,.04);--text:#fff;--dim:#9a9aab;--bd:rgba(255,255,255,.09)}
 [data-theme=light]{--bg:#f6f5fc;--bg2:#ffffff;--card:rgba(255,255,255,.85);--text:#0f0e1a;--dim:#4a4a5e;--bd:rgba(40,30,100,.12)}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:clip}
 body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .4s,color .4s}
 body{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%238b5cf6%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23ec4899%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath%20d%3D%22M4%202%20L4%2024%20L10%2018.5%20L14.5%2028.5%20L19%2026.5%20L14.5%2017%20L22.5%2017%20Z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2,auto}a,button,[role=tab],.crs-c,.btn,.so,.lg,.up,.cf-fab{cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23ec4899%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2306b6d4%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath%20d%3D%22M4%202%20L4%2024%20L10%2018.5%20L14.5%2028.5%20L19%2026.5%20L14.5%2017%20L22.5%2017%20Z%22%20fill%3D%22url%28%23g%29%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.8%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2,pointer}
 a{color:inherit}
@@ -183,7 +183,7 @@ footer .h{color:var(--s);display:inline-block;animation:pulse 1.5s infinite}
  .mt{display:block}
  .links{position:fixed;top:78px;right:-110%;flex-direction:column;align-items:stretch;background:var(--bg2);width:270px;padding:1.6rem;border-radius:24px;border:1px solid var(--bd);box-shadow:0 30px 70px rgba(0,0,0,.5);transition:right .4s;gap:.5rem}
  .links.on{right:14px}.links a{display:block;text-align:center}.tt{width:100%;border-radius:100px}
- .hc{grid-template-columns:1fr;gap:3rem}.hv{order:-1}.tilt{max-width:320px}
+ .hc{grid-template-columns:1fr;gap:2rem}.tilt{max-width:320px}
  section{padding:3.2rem 5%}.ti{padding-left:56px}.tl::before{left:12px}.ti::before{left:2px}
  .cb{grid-template-columns:1fr}
 }
@@ -341,7 +341,7 @@ h1 .nm:nth-child(3){transition:.5s}h1 .nm:nth-child(3):hover .ch{-webkit-text-fi
 .svc .si{margin-bottom:.5rem}
 .svc h3{font-family:Syne;font-size:1.15rem}.svc p{color:var(--dim);font-size:.9rem;line-height:1.65;flex:1}
 .svc a{color:var(--a);font:600 .85rem 'JetBrains Mono',monospace;text-decoration:none}.svc a:hover{color:var(--s)}
-.vd{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.4rem}
+.vd{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1.4rem}
 .vc{position:relative;display:block;aspect-ratio:16/9;border-radius:20px;overflow:hidden;border:1px solid var(--bd);transition:.5s}
 .vc img{width:100%;height:100%;object-fit:cover;transition:.6s}
 .vc:hover{transform:translateY(-8px);box-shadow:0 26px 60px rgba(255,0,51,.25)}.vc:hover img{transform:scale(1.08)}
@@ -422,6 +422,9 @@ img,svg{max-width:100%}
  .btns{width:100%;gap:.7rem}
  .btns .btn{flex:1 1 140px;text-align:center;padding:.9rem 1rem}
  .tilt{padding:1.8rem 1.4rem}
+ .orb{animation:none}
+ .orb span{animation:none}
+ .orb span:nth-child(3){bottom:20px}
  .ms b{font-size:1.4rem}
  .mq{padding:1.4rem 0}.mq-t{gap:2.2rem}.mq-t span{font-size:1.05rem;gap:2.2rem}
  .stat{padding:1.2rem .8rem}
@@ -452,6 +455,7 @@ img,svg{max-width:100%}
  h1 .hi{font-size:1.3rem}
 }
 @media(hover:none){
+ button{min-height:44px}
  .tc:hover,.sk:hover,.svc:hover,.so:hover,.stat:hover,.ms div:hover,.btn:hover{transform:none}
 }
 
@@ -572,7 +576,7 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
 @media(max-width:700px){.kl-2{grid-template-columns:1fr}}
 
 /* ===== TOOLS / BOOKING / FAQ ===== */
-.tz-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.4rem}
+.tz-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1.4rem}
 .tz-c{background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:1.6rem;backdrop-filter:blur(20px)}
 .tz-c.wide{grid-column:1/-1}
 .tz-c h3{font-family:Syne,sans-serif;font-size:1.15rem;margin-bottom:1rem}
@@ -595,7 +599,7 @@ input[type=date],input[type=time]{color-scheme:dark}[data-theme=light] input[typ
 
 <nav>
   <a class="logo grad" href="#home">PABAN.DEV</a>
-  <button class="mt" id="mt" aria-label="Menu">☰</button>
+  <button class="mt" id="mt" aria-label="Open menu" aria-controls="links" aria-expanded="false">☰</button>
   <ul class="links" id="links">
     <li><a href="#home">Home</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -1067,7 +1071,7 @@ let ri=0,ci=0,del=false;
 
 // menu + theme (safe storage)
 const mt=$('#mt'),lk=$('#links');
-const menu=on=>{lk.classList.toggle('on',on);mt.textContent=on?'✕':'☰';mt.setAttribute('aria-expanded',on)};
+const menu=on=>{lk.classList.toggle('on',on);mt.textContent=on?'✕':'☰';mt.setAttribute('aria-expanded',on);mt.setAttribute('aria-label',on?'Close menu':'Open menu')};
 mt.onclick=e=>{e.stopPropagation();menu(!lk.classList.contains('on'))};
 $$('.links a').forEach(a=>a.addEventListener('click',()=>menu(false)));
 document.addEventListener('click',e=>{if(!e.target.closest('nav'))menu(false)});
@@ -1599,20 +1603,6 @@ document.getElementById('jt-f').addEventListener('click',e=>{const b=e.target.cl
 <script src="jyotish-plus.js?v=14"></script>
 <script src="jyotish-more.js?v=1"></script>
 <script src="tools-more.js?v=2"></script>
-
-<!-- राइट क्लिक र भ्यू सोर्स रोक्ने सुरक्षा कोड यहाँ राख्नुहोस् -->
-<script>
-  // १. माउसको Right Click रोक्न
-  document.addEventListener('contextmenu', event => event.preventDefault());
-
-  // २. F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U जस्ता Developer Shortcuts रोक्न
-  document.onkeydown = function(e) {
-    if (e.keyCode == 123) { return false; } // F12 Key
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Shift+I
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Shift+J
-    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U (View Source)
-  };
-</script>
 
 </body>
 </html>

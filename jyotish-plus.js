@@ -47,7 +47,7 @@ function panch(y,mo,d,hh){const r=calc(y,mo,d,hh,0,5.75,27.7172,85.3240),el=((r.
  return{t,nk,lm:(Math.floor(r2.sid[0]/30)+1)%12,sun:Math.floor(r.sid[0]/30),mo:Math.floor(r.sid[1]/30)}}
 
 /* ---- inject CSS + UI ---- */
-const st=document.createElement('style');st.textContent=`.ml-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;max-width:900px;margin:0 auto}
+const st=document.createElement('style');st.textContent=`.ml-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1.2rem;max-width:900px;margin:0 auto}
 .pt-h{display:flex;align-items:center;justify-content:center;gap:.7rem;margin-bottom:1rem;flex-wrap:wrap}.pt-h h3{font-family:Syne,sans-serif;font-size:1.4rem;min-width:170px;text-align:center}
 .pt-h button{padding:.6rem 1rem;border-radius:100px;border:1px solid var(--bd);background:var(--card);color:var(--text);font:600 1rem 'Space Grotesk',sans-serif}
 .pt-w,.pt-g{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;max-width:760px;margin:0 auto}.pt-w{margin-bottom:.4rem}
